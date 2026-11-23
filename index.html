@@ -35,6 +35,72 @@
     </div>
   </main>
 
+  <!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LHU Financial Hub - Trang Chủ</title>
+  <link rel="stylesheet" href="css/style.css">
+  <!-- Thêm Google Fonts để typography đẹp hơn -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <!-- Header cố định với hiệu ứng glassmorphism -->
+  <header class="header">
+    <div class="logo">
+      <span class="logo-icon">🎓</span> 
+      <span>LHU <span class="highlight">FINANCIAL HUB</span></span>
+    </div>
+    <nav class="nav-menu">
+      <ul>
+        <li><a href="index.html" class="active">Trang chủ</a></li>
+        <li><a href="financial.html">Học phí & Học bổng</a></li>
+        <li><a href="profile.html">Hồ sơ cá nhân</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="container">
+    <!-- Phần chào mừng dạng Banner nổi bật -->
+    <section class="welcome-banner">
+      <div class="welcome-text">
+        <h1 class="page-title">Tổng quan Tài chính Sinh viên</h1>
+        <p class="welcome-subtitle">Xin chào, <strong id="dash-student-name">...</strong> <span class="badge-mssv">MSSV: <span id="dash-student-id">...</span></span></p>
+      </div>
+    </section>
+
+    <!-- Các thẻ thống kê đổ dữ liệu từ JSON -->
+    <section class="dashboard-section">
+      <div class="grid-cards" id="dashboard-widgets">
+        <!-- Widget sẽ được render tự động từ JS -->
+      </div>
+    </section>
+
+    <!-- Phím tắt điều hướng nhanh -->
+    <section class="action-section">
+      <div class="card action-card">
+        <div class="action-header">
+          <h2>Thao tác nhanh</h2>
+          <p>Lựa chọn các chức năng thường dùng bên dưới</p>
+        </div>
+        <div class="action-buttons">
+          <a href="financial.html" class="btn btn-primary">
+            <span class="btn-icon">💳</span> Tra cứu & Tính học phí kỳ này
+          </a>
+          <a href="profile.html" class="btn btn-secondary">
+            <span class="btn-icon">🔔</span> Cập nhật thông tin nhận thông báo
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="js/data.js"></script>
+  <script src="js/dashboard.js"></script>
+</body>
+</html>
+
   <script src="js/data.js"></script>
   <script src="js/dashboard.js"></script>
 </body>
