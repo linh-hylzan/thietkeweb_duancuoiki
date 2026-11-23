@@ -12,12 +12,14 @@ Website hỗ trợ sinh viên Đại học Lạc Hồng (LHU) theo dõi tổng q
 
 ```text
 LHU-Financial-Hub/
-├── index.html          # Trang 1: Tổng quan tài chính (Dashboard)
-├── README.md           # Tài liệu hướng dẫn dự án
+├── index.html          # Trang chủ (Dashboard)
+├── financial.html      # Trang Tra cứu Học phí & Học bổng
+├── profile.html        # Trang Quản lý Hồ sơ & Cài đặt
 ├── css/
-│   └── style.css       # Giao diện chung, bố cục Grid/Flexbox và Responsive
+│   └── style.css       # File CSS chung (Grid/Flexbox, Responsive)
 ├── js/
-│   └── app.js          # Dữ liệu JSON mẫu và toàn bộ logic xử lý 3 trang
-└── pages/
-    ├── financial.html  # Trang 2: Xét học bổng, lọc/tìm kiếm và tính học phí
-    └── profile.html    # Trang 3: Quản lý hồ sơ sinh viên và kiểm tra Regex
+│   ├── data.js         # Dữ liệu giả lập (JSON chứa danh sách môn học, học bổng, lịch sử)
+│   ├── dashboard.js    # Logic đổ dữ liệu ra trang chủ
+│   ├── financial.js    # Logic tính tiền, checkbox change, lọc & tìm kiếm
+│   └── profile.js      # Logic kiểm tra Regex và lưu thông tin
+└── README.md           # Mô tả dự án và thành viên nhóm
