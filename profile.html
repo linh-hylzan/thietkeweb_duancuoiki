@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hồ Sơ & Cấu Hình - LHU Financial Hub</title>
+    <!-- Font Awesome & Tailwind CSS (hoặc file style.css riêng của bạn) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-50 text-slate-900">
+
+    <!-- Thanh điều hướng -->
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-blue-900 text-white flex items-center justify-center font-bold text-lg">
+                    LHU
+                </div>
+                <div>
+                    <h1 class="font-bold text-blue-900 text-base">LHU Financial Hub</h1>
+                    <p class="text-xs text-slate-500">Đại học Lạc Hồng · Phân hệ Tài chính</p>
+                </div>
+            </div>
+            <nav class="flex items-center gap-4">
+                <a href="index.html" class="text-sm font-medium text-slate-600 hover:text-blue-900">Trang Chủ</a>
+                <a href="financial.html" class="text-sm font-medium text-slate-600 hover:text-blue-900">Học Phí & Học Bổng</a>
+                <a href="profile.html" class="text-sm font-semibold text-blue-900 bg-blue-50 px-3 py-1.5 rounded-lg">Hồ Sơ & Cấu Hình</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Nội dung chính: Trang Quản lý Hồ sơ & Cấu hình -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="mb-6">
+            <h2 class="text-2xl font-bold text-slate-900">Hồ Sơ Sinh Viên & Cấu Hình Hệ Thống</h2>
+            <p class="text-sm text-slate-500 mt-1">Cập nhật thông tin cá nhân (kiểm tra định dạng bằng Regex) và thiết lập tham số tính học bổng</p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Thẻ tóm tắt bên trái -->
+            <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm h-fit">
+                <div class="flex flex-col items-center text-center pb-6 border-b border-slate-100">
+                    <div class="w-24 h-24 rounded-full bg-gradient-to-tr from-blue-900 to-blue-600 text-white flex items-center justify-center text-3xl font-bold mb-4 shadow-md" id="profile-avatar-initials">
+                        MA
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-900" id="display-profile-name">Nguyễn Minh Anh</h3>
+                    <p class="text-sm text-blue-800 font-medium mt-0.5" id="display-profile-mssv">MSSV: 122001458</p>
+                    <span class="mt-2 inline-flex items-center gap-1.5 text-xs font-medium bg-slate-100 text-slate-700 px-3 py-1 rounded-full" id="display-profile-major">
+                        Khoa Công nghệ Thông tin
+                    </span>
+                </div>
+
+                <div class="py-5 space-y-3 text-sm">
+                    <div class="flex justify-between">
+                        <span class="text-slate-500">Email:</span>
+                        <span class="font-medium text-slate-800 text-right break-all" id="display-profile-email">minhanh.122001458@lhu.edu.vn</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-slate-500">Điện thoại:</span>
+                        <span class="font-medium text-slate-800" id="display-profile-phone">0908123456</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-slate-500">Ngày sinh:</span>
+                        <span class="font-medium text-slate-800" id="display-profile-dob">15/08/2004</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-slate-500">GPA hiện tại:</span>
+                        <span class="font-bold text-emerald-600" id="display-profile-gpa">3.65 / 4.00</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Form chỉnh sửa HTML5 bên phải -->
+            <div class="lg:col-span-2 bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
+                <form id="profile-form" novalidate class="space-y-5">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                        <!-- Họ và tên -->
+                        <div>
+                            <label for="input-fullname" class="block text-sm font-semibold text-slate-700 mb-1.5">Họ và tên sinh viên *</label>
+                            <input type="text" id="input-fullname" required value="Nguyễn Minh Anh"
+                                class="w-full px-3.5 py-2.5 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <p id="err-fullname" class="text-xs text-rose-600 mt-1 hidden">Vui lòng nhập họ và tên hợp lệ (tối thiểu 3 ký tự).</p>
+                        </div>
+
+                        <!-- Mã số sinh viên -->
+                        <div>
+                            <label for="input-mssv" class="block text-sm font-semibold text-slate-700 mb-1.5">Mã số sinh viên (MSSV) *</label>
+                            <input type="text" id="input-mssv" required value="122001458" pattern="^\d{9}$"
+                                class="w-full px-3.5 py-2.5 border border-slate-200 rounded-xl text-sm bg-slate-50 text-slate-600 focus:outline-none">
+                            <p id="err-mssv" class="text-xs text-rose-600 mt-1 hidden">MSSV phải gồm đúng 9 chữ số.</p>
+                        </div>
+
+                        <!-- Email (Kiểm tra Regex) -->
+                        <div>
+                            <label for="input-email" class="block text-sm font-semibold text-slate-700 mb-1.5">Email liên hệ *</label>
+                            <input type="email" id="input-email" required value="minhanh.122001458@lhu.edu.vn"
+                                class="w-full px-3.5 py-2.5 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <p id="err-email" class="text-xs text-rose-600 mt-1 hidden">Định dạng Email không hợp lệ (VD: ten@lhu.edu.vn).</p>
+                        </div>
+
+                        <!-- Số điện thoại (Kiểm tra Regex VN) -->
+                        <div>
+                            <label for="input-phone" class="block text-sm font-semibold text-slate-700 mb-1.5">Số điện thoại (VN) *</label>
+                            <input type="tel" id="input-phone" required value="0908123456"
+                                class="w-full px-3.5 py-2.5 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <p id="err-phone" class="text-xs text-rose-600 mt-1 hidden">Số điện thoại Việt Nam không hợp lệ (10 số, đầu 03/05/07/08/09).</p>
+                        </div>
+
+                        <!-- Ngày sinh -->
+                        <div>
+                            <label for="input-dob" class="block text-sm font-semibold text-slate-700 mb-1.5">Ngày sinh</label>
+                            <input type="date" id="input-dob" value="2004-08-15"
+                                class="w-full px-3.5 py-2.5 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+
+                        <!-- Điểm GPA giả lập -->
+                        <div>
+                            <label for="input-gpa" class="block text-sm font-semibold text-slate-700 mb-1.5">Điểm GPA tích lũy (0.0 - 4.0) *</label>
+                            <input type="number" id="input-gpa" step="0.01" min="0" max="4" required value="3.65"
+                                class="w-full px-3.5 py-2.5 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <p id="err-gpa" class="text-xs text-rose-600 mt-1 hidden">Điểm GPA phải nằm trong khoảng từ 0.00 đến 4.00.</p>
+                        </div>
+                    </div>
+
+                    <!-- Checkbox Cấu hình BHYT -->
+                    <div class="pt-4 border-t border-slate-100">
+                        <div class="flex items-center justify-between py-2">
+                            <div>
+                                <p class="text-sm font-medium text-slate-800">Tự động cộng phí Bảo hiểm Y tế bắt buộc</p>
+                                <p class="text-xs text-slate-500">Mức thu cố định 680.000đ/năm vào bảng kê khai học phí</p>
+                            </div>
+                            <input type="checkbox" id="setting-bhyt" checked class="w-5 h-5 accent-blue-900 rounded cursor-pointer">
+                        </div>
+                    </div>
+
+                    <!-- Thông báo lưu thành công -->
+                    <div id="profile-save-alert" class="hidden p-3.5 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-sm flex items-center gap-2">
+                        <i class="fa-solid fa-circle-check text-emerald-600"></i>
+                        <span>Đã kiểm tra dữ liệu hợp lệ và lưu thông tin thành công!</span>
+                    </div>
+
+                    <!-- Nút Submit & Reset -->
+                    <div class="flex items-center justify-end gap-3 pt-2">
+                        <button type="button" id="btn-reset-profile" class="px-4 py-2.5 rounded-xl border border-slate-200 text-sm font-semibold text-slate-600 hover:bg-slate-50 transition">
+                            Khôi phục mặc định
+                        </button>
+                        <button type="submit" class="px-6 py-2.5 rounded-xl bg-blue-900 hover:bg-blue-800 text-white text-sm font-semibold shadow-sm transition flex items-center gap-2">
+                            <i class="fa-solid fa-floppy-disk"></i> Lưu thay đổi
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <!-- Nhúng file logic JavaScript -->
+    <script src="profile.js"></script>
+</body>
+</html>
