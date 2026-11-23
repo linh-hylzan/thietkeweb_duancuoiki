@@ -3,13 +3,19 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tra cứu Học phí & Học bổng - LHU</title>
+  <title>LHU Financial Hub - Học Phí & Học Bổng</title>
   <link rel="stylesheet" href="css/style.css">
+  <!-- Google Fonts Inter -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-  <header>
-    <div class="logo">🎓 LHU FINANCIAL HUB</div>
-    <nav>
+  <!-- Header cố định -->
+  <header class="header">
+    <div class="logo">
+      <span class="logo-icon">🎓</span> 
+      <span>LHU <span class="highlight">FINANCIAL HUB</span></span>
+    </div>
+    <nav class="nav-menu">
       <ul>
         <li><a href="index.html">Trang chủ</a></li>
         <li><a href="financial.html" class="active">Học phí & Học bổng</a></li>
@@ -19,68 +25,60 @@
   </header>
 
   <main class="container">
-    <h1 class="page-title">Xét Học bổng & Kê khai Học phí</h1>
+    <!-- Tiêu đề trang -->
+    <section class="welcome-banner">
+      <h1 class="page-title">Xét Học bổng & Kê khai Học phí</h1>
+      <p class="welcome-subtitle">Tra cứu học bổng theo năng lực học tập và tính toán công nợ chi tiết.</p>
+    </section>
 
-    <!-- Phần 1: Cards hiển thị mức học bổng dựa trên điểm số -->
-    <h2 style="margin-bottom: 1rem;">1. Danh mục Học bổng theo GPA (GPA của bạn: <span id="current-gpa" style="color: var(--secondary);"></span>)</h2>
-    <div class="grid-cards" id="scholarship-cards"></div>
+    <!-- Khối 1: Danh mục học bổng -->
+    <section class="card" style="margin-bottom: 2rem;">
+      <h2 style="color: var(--primary); font-size: 1.25rem; margin-bottom: 1rem;">1. Danh mục Học bổng theo GPA</h2>
+      <div id="scholarship-list">
+        <!-- Dữ liệu render từ JS -->
+        <p style="color: var(--text-muted);">Đang tải thông tin học bổng...</p>
+      </div>
+    </section>
 
-    <!-- Phần 2: Giả lập Input HTML5 (number, date) & Bộ lọc tìm kiếm -->
-    <h2 style="margin-bottom: 1rem;">2. Bảng kê khai môn học & Tính toán công nợ</h2>
-    <div class="controls">
-      <input type="text" id="search-input" placeholder="Tìm theo tên hoặc mã môn học...">
-      <select id="status-filter">
-        <option value="all">Tất cả trạng thái</option>
-        <option value="unpaid">Chưa đóng</option>
-        <option value="paid">Đã đóng</option>
-      </select>
-      <div style="display: flex; align-items: center; gap: 0.5rem;">
-        <label for="pay-date">Ngày dự kiến nộp:</label>
-        <input type="date" id="pay-date" value="2026-12-01">
+    <!-- Khối 2: Bảng kê khai môn học & Tính học phí -->
+    <section class="card">
+      <h2 style="color: var(--primary); font-size: 1.25rem; margin-bottom: 1rem;">2. Bảng kê khai môn học & Tính toán công nợ</h2>
+      
+      <!-- Các bộ lọc và nhập liệu -->
+      <div style="display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 1.5rem; align-items: center;">
+        <input type="text" id="search-subject" placeholder="Tìm theo tên hoặc mã môn..." class="form-input" style="flex: 1; min-width: 200px; padding: 0.5rem; border: 1px solid #cbd5e1; border-radius: 6px;">
+        <select id="filter-status" class="form-select" style="padding: 0.5rem; border: 1px solid #cbd5e1; border-radius: 6px;">
+          <option value="all">Tất cả trạng thái</option>
+        </select>
       </div>
-      <div style="display: flex; align-items: center; gap: 0.5rem;">
-        <label for="extra-fee">Phí BHYT/Khác (VNĐ):</label>
-        <input type="number" id="extra-fee" value="0" min="0" step="50000">
-      </div>
-    </div>
 
-    <!-- Bảng danh sách môn học có checkbox -->
-    <div class="table-wrapper">
-      <table>
-        <thead>
-          <tr>
-            <th>Chọn đóng</th>
-            <th>Mã môn</th>
-            <th>Tên môn học</th>
-            <th>Tín chỉ</th>
-            <th>Học kỳ</th>
-            <th>Học phí</th>
-            <th>Trạng thái</th>
-          </tr>
-        </thead>
-        <tbody id="course-table-body"></tbody>
-      </table>
-    </div>
+      <div style="display: flex; gap: 1.5rem; flex-wrap: wrap; margin-bottom: 1.5rem;">
+        <div>
+          <label style="font-size: 0.875rem; font-weight: 500; display: block; margin-bottom: 0.25rem;">Ngày dự kiến nộp:</label>
+          <input type="date" id="due-date" class="form-input" style="padding: 0.45rem; border: 1px solid #cbd5e1; border-radius: 6px;">
+        </div>
+        <div>
+          <label style="font-size: 0.875rem; font-weight: 500; display: block; margin-bottom: 0.25rem;">Phí BHYT/Khác (VND):</label>
+          <input type="number" id="other-fees-input" value="0" class="form-input" style="padding: 0.45rem; border: 1px solid #cbd5e1; border-radius: 6px;">
+        </div>
+      </div>
 
-    <!-- Khung tổng kết tính tiền tự động -->
-    <div class="summary-box">
-      <div class="summary-row">
-        <span>Tổng học phí các môn đã chọn:</span>
-        <strong id="subtotal-fee">0 đ</strong>
+      <!-- Khu vực hiển thị bảng môn học (JS sẽ render bảng vào đây) -->
+      <div class="table-responsive" style="overflow-x: auto; margin-bottom: 1.5rem;">
+        <div id="subjects-table-container">
+          <!-- Bảng môn học -->
+        </div>
       </div>
-      <div class="summary-row">
-        <span>Phí phụ thu khác:</span>
-        <strong id="display-extra-fee">0 đ</strong>
+
+      <!-- Tổng kết học phí -->
+      <div style="background-color: #f8fafc; padding: 1.25rem; border-radius: 8px; border: 1px solid #e2e8f0;">
+        <p style="margin: 0.25rem 0;">Tổng học phí các môn đã chọn: <strong id="sum-tuition">0 đ</strong></p>
+        <p style="margin: 0.25rem 0;">Phí phụ thu khác: <strong id="sum-other">0 đ</strong></p>
+        <p style="margin: 0.25rem 0;">Trừ học bổng: <strong id="sum-discount" style="color: var(--accent);">-0 đ</strong></p>
+        <hr style="border: none; border-top: 1px solid #cbd5e1; margin: 0.75rem 0;">
+        <p style="margin: 0; font-size: 1.1rem; color: var(--primary);"><strong>Số tiền thực tế cần đóng: <span id="sum-total">0 đ</span></strong></p>
       </div>
-      <div class="summary-row" style="color: var(--success);">
-        <span>Trừ học bổng (<span id="discount-rate">0%</span>):</span>
-        <strong id="discount-amount">- 0 đ</strong>
-      </div>
-      <div class="summary-row total">
-        <span>Số tiền thực tế cần đóng:</span>
-        <span id="final-total">0 đ</span>
-      </div>
-    </div>
+    </section>
   </main>
 
   <script src="js/data.js"></script>
