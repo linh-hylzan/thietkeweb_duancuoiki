@@ -1,49 +1,45 @@
-// Dữ liệu JSON phục vụ toàn hệ thống
-const financialData = {
+// Dữ liệu mặc định ban đầu
+const DEFAULT_DATA = {
   student: {
-    id: "123001456",
-    name: "Nguyễn Văn An",
-    faculty: "Công nghệ Thông tin",
+    name: "Nguyễn Minh Anh",
+    id: "122001458",
+    faculty: "Khoa Công nghệ Thông tin",
+    email: "minhanh.122001458@lhu.edu.vn",
+    phone: "0908123456",
+    dob: "2004-08-15",
     gpa: 3.65,
-    email: "an.nv@lhu.edu.vn",
-    phone: "0912345678",
-    dob: "2005-08-15",
-    notifyEmail: true
+    autoBHYT: true
   },
-  deadline: "15/12/2026",
   scholarships: [
-    {
-      id: "HB01",
-      name: "Học bổng Khuyến khích học tập (Loại Xuất sắc)",
-      minGpa: 3.6,
-      discountPercent: 50,
-      description: "Dành cho sinh viên có GPA từ 3.60 trở lên."
-    },
-    {
-      id: "HB02",
-      name: "Học bổng Khuyến khích học tập (Loại Giỏi)",
-      minGpa: 3.2,
-      discountPercent: 25,
-      description: "Dành cho sinh viên có GPA từ 3.20 đến 3.59."
-    },
-    {
-      id: "HB03",
-      name: "Học bổng Tân sinh viên / Chuyên cần",
-      minGpa: 2.5,
-      discountPercent: 10,
-      description: "Dành cho sinh viên đạt chuẩn rèn luyện và GPA >= 2.50."
-    }
+    { id: 1, name: "Học bổng Xuất sắc (Loại 1)", minGpa: 3.6, discount: 0.50, desc: "Giảm 50% học phí học kỳ (GPA từ 3.60 trở lên)" },
+    { id: 2, name: "Học bổng Giỏi (Loại 2)", minGpa: 3.2, discount: 0.30, desc: "Giảm 30% học phí học kỳ (GPA từ 3.20 - 3.59)" },
+    { id: 3, name: "Học bổng Khuyến khích (Loại 3)", minGpa: 2.8, discount: 0.15, desc: "Giảm 15% học phí học kỳ (GPA từ 2.80 - 3.19)" }
   ],
-  courses: [
-    { code: "IT001", name: "Thiết kế Web & Ứng dụng AI", credits: 3, fee: 2400000, status: "unpaid", semester: "HK1 2026-2027" },
-    { code: "IT002", name: "Cấu trúc dữ liệu và Giải thuật", credits: 4, fee: 3200000, status: "unpaid", semester: "HK1 2026-2027" },
-    { code: "IT003", name: "Cơ sở dữ liệu nâng cao", credits: 3, fee: 2400000, status: "unpaid", semester: "HK1 2026-2027" },
-    { code: "EN001", name: "Tiếng Anh chuyên ngành CNTT", credits: 2, fee: 1600000, status: "paid", semester: "HK1 2026-2027" },
-    { code: "PE002", name: "Giáo dục thể chất 2", credits: 1, fee: 800000, status: "paid", semester: "HK2 2025-2026" }
+  subjects: [
+    { code: "IT001", name: "Thiết kế Web nâng cao", credits: 3, semester: "HK1 2026-2027", feePerCredit: 650000, status: "Chưa đóng", selected: true },
+    { code: "IT002", name: "Cơ sở dữ liệu phân tán", credits: 3, semester: "HK1 2026-2027", feePerCredit: 650000, status: "Chưa đóng", selected: true },
+    { code: "IT003", name: "Lập trình hướng đối tượng", credits: 4, semester: "HK1 2026-2027", feePerCredit: 650000, status: "Đã đóng", selected: false },
+    { code: "IT004", name: "Mạng máy tính căn bản", credits: 3, semester: "HK1 2026-2027", feePerCredit: 650000, status: "Chưa đóng", selected: false },
+    { code: "EN002", name: "Tiếng Anh chuyên ngành CNTT", credits: 2, semester: "HK1 2026-2027", feePerCredit: 550000, status: "Chưa đóng", selected: true }
   ]
 };
 
+// Hàm lấy dữ liệu từ localStorage (nếu chưa có thì dùng mặc định)
+function getAppData() {
+  const saved = localStorage.getItem("lhu_financial_data");
+  if (saved) {
+    return JSON.parse(saved);
+  }
+  localStorage.setItem("lhu_financial_data", JSON.stringify(DEFAULT_DATA));
+  return JSON.parse(JSON.stringify(DEFAULT_DATA));
+}
+
+// Hàm lưu dữ liệu vào localStorage
+function saveAppData(data) {
+  localStorage.setItem("lhu_financial_data", JSON.stringify(data));
+}
+
 // Hàm định dạng tiền tệ VNĐ
 function formatCurrency(amount) {
-  return amount.toLocaleString('vi-VN') + ' đ';
+  return new Intl.NumberFormat('vi-VN').format(Math.round(amount)) + ' đ';
 }
