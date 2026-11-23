@@ -1,33 +1,37 @@
 document.addEventListener("DOMContentLoaded", () => {
-  // Lấy thông tin sinh viên từ localStorage (nếu đã chỉnh sửa ở trang Profile) hoặc từ JSON gốc
-  const savedStudent = JSON.parse(localStorage.getItem("lhu_student")) || financialData.student;
+  const appData = getAppData();
 
-  document.getElementById("dash-student-name").textContent = savedStudent.name;
-  document.getElementById("dash-student-id").textContent = savedStudent.id;
+  // Hiển thị tên và MSSV trên banner chào mừng
+  const nameEl = document.getElementById("dash-student-name");
+  const idEl = document.getElementById("dash-student-id");
+  if (nameEl) nameEl.textContent = appData.student.name;
+  if (idEl) idEl.textContent = appData.student.id;
 
-  // Tính toán tổng quan từ dữ liệu JSON
-  const unpaidCourses = financialData.courses.filter(c => c.status === "unpaid");
-  const totalUnpaid = unpaidCourses.reduce((sum, item) => sum + item.fee, 0);
-
-  // Xác định học bổng cao nhất đạt được dựa trên GPA
-  const eligibleScholarship = financialData.scholarships.find(s => savedStudent.gpa >= s.minGpa);
-  const scholarshipText = eligibleScholarship 
-    ? `Giảm ${eligibleScholarship.discountPercent}% (${eligibleScholarship.name})` 
-    : "Chưa đủ điều kiện";
-
-  // Render các thẻ Widget bằng CSS Grid
+  // Tính toán các thẻ thống kê
   const widgetsContainer = document.getElementById("dashboard-widgets");
-  const widgets = [
-    { title: "GPA Tích lũy hiện tại", value: savedStudent.gpa.toFixed(2), highlight: false },
-    { title: "Học phí chưa thanh toán", value: formatCurrency(totalUnpaid), highlight: true },
-    { title: "Mức học bổng đủ điều kiện", value: eligibleScholarship ? `${eligibleScholarship.discountPercent}%` : "0%", highlight: false },
-    { title: "Hạn đóng học phí gần nhất", value: financialData.deadline, highlight: true }
-  ];
+  if (widgetsContainer) {
+    const unpaidSubs = appData.subjects.filter(s => s.status === "Chưa đóng");
+    const totalDebt = unpaidSubs.reduce((sum, s) => sum + (s.credits * s.feePerCredit), 0);
+    const totalCredits = unpaidSubs.reduce((sum, s) => sum + s.credits, 0);
 
-  widgetsContainer.innerHTML = widgets.map(w => `
-    <div class="card ${w.highlight ? 'highlight' : ''}">
-      <h3>${w.title}</h3>
-      <div class="value">${w.value}</div>
-    </div>
-  `).join("");
+    widgetsContainer.innerHTML = `
+      <div class="card">
+        <div style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 0.5rem;">Điểm GPA Tích Lũy</div>
+        <div style="font-size: 1.75rem; font-weight: 700; color: var(--primary);">${Number(appData.student.gpa).toFixed(2)} / 4.00</div>
+        <div style="font-size: 0.85rem; color: var(--accent); margin-top: 0.5rem;">Đủ điều kiện xét học bổng</div>
+      </div>
+
+      <div class="card">
+        <div style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 0.5rem;">Công nợ Học phí Chưa đóng</div>
+        <div style="font-size: 1.75rem; font-weight: 700; color: #dc2626;">${formatCurrency(totalDebt)}</div>
+        <div style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.5rem;">Gồm ${unpaidSubs.length} môn (${totalCredits} tín chỉ)</div>
+      </div>
+
+      <div class="card">
+        <div style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 0.5rem;">Trạng thái Hồ sơ</div>
+        <div style="font-size: 1.35rem; font-weight: 700; color: var(--accent); margin-top: 0.3rem;">Đã xác thực</div>
+        <div style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.6rem;">${appData.student.faculty}</div>
+      </div>
+    `;
+  }
 });
