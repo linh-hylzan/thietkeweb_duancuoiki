@@ -1,65 +1,1470 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>LHU Financial Hub - Trang Chủ</title>
-  <link rel="stylesheet" href="css/style.css">
-  <!-- Thêm Google Fonts để typography đẹp hơn -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LHU Financial Hub - Cổng Tra Cứu Học Phí & Học Bổng | Đại học Lạc Hồng</title>
+    <!-- Tải Tailwind CSS qua CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font chữ Inter chuẩn EdTech hiện đại -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        lhu: {
+                            dark: '#0f172a',
+                            navy: '#1e3a8a',
+                            blue: '#2563eb',
+                            gold: '#f59e0b',
+                            goldLight: '#fef3c7',
+                            surface: '#f8fafc'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Tùy chỉnh thanh cuộn và hiệu ứng chuyển trang mượt mà */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 9999px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+        .page-section {
+            display: none;
+            animation: fadeIn 0.35s ease-out forwards;
+        }
+        .page-section.active {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Hiệu ứng thẻ học bổng được chọn */
+        .scholarship-card-active {
+            border-color: #f59e0b !important;
+            background: linear-gradient(145deg, #ffffff 0%, #fffbeb 100%);
+            box-shadow: 0 12px 25px -5px rgba(245, 158, 11, 0.25), 0 8px 10px -6px rgba(245, 158, 11, 0.1);
+            transform: translateY(-4px);
+        }
+
+        /* Hiệu ứng trượt banner */
+        .slide-item {
+            transition: opacity 0.6s ease-in-out, transform 0.6s ease-in-out;
+        }
+    </style>
 </head>
-<body>
-  <!-- Header cố định với hiệu ứng glassmorphism -->
-  <header class="header">
-    <div class="logo">
-      <span class="logo-icon">🎓</span> 
-      <span>LHU <span class="highlight">FINANCIAL HUB</span></span>
+<body class="bg-lhu-surface text-slate-800 antialiased selection:bg-lhu-gold selection:text-lhu-dark pb-20 lg:pb-0">
+
+    <!-- ==================== KHUNG BỐ CỤC CHÍNH (DESKTOP SIDEBAR + MAIN) ==================== -->
+    <div class="min-h-screen flex flex-col lg:flex-row">
+
+        <!-- SIDEBAR CỐ ĐỊNH TRÊN DESKTOP -->
+        <aside class="hidden lg:flex lg:w-72 lg:flex-col lg:fixed lg:inset-y-0 bg-lhu-dark text-white shadow-2xl z-30">
+            <!-- Logo Đại học Lạc Hồng -->
+            <div class="flex items-center gap-3.5 px-6 py-6 border-b border-slate-800 bg-gradient-to-r from-lhu-dark to-lhu-navy/60">
+                <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-lhu-gold to-amber-600 flex items-center justify-center text-lhu-dark font-extrabold text-xl shadow-lg shadow-amber-500/20 shrink-0">
+                    LHU
+                </div>
+                <div>
+                    <h1 class="font-bold text-base tracking-tight text-white leading-tight">FINANCIAL HUB</h1>
+                    <p class="text-[11px] text-amber-400 font-medium tracking-wider uppercase">Đại học Lạc Hồng</p>
+                </div>
+            </div>
+
+            <!-- Thông tin nhanh sinh viên ở Sidebar -->
+            <div class="px-5 py-4 mx-4 mt-5 rounded-2xl bg-slate-800/70 border border-slate-700/80">
+                <div class="flex items-center gap-3">
+                    <div id="sidebar-avatar" class="w-10 h-10 rounded-full bg-lhu-navy border-2 border-lhu-gold flex items-center justify-center font-bold text-sm text-amber-300 shrink-0">
+                        SV
+                    </div>
+                    <div class="overflow-hidden">
+                        <p id="sidebar-name" class="text-sm font-semibold text-white truncate">Nguyễn Minh Khôi</p>
+                        <p id="sidebar-mssv" class="text-xs text-slate-400 font-mono">122001458</p>
+                    </div>
+                </div>
+                <div class="mt-3 pt-3 border-t border-slate-700/80 flex items-center justify-between text-xs">
+                    <span class="text-slate-400">GPA Tích lũy:</span>
+                    <span id="sidebar-gpa" class="px-2 py-0.5 rounded-md bg-amber-500/20 text-amber-300 font-bold">3.65 / 4.0</span>
+                </div>
+            </div>
+
+            <!-- Menu Điều hướng 3 Trang bắt buộc -->
+            <nav class="flex-1 px-4 py-6 space-y-2">
+                <p class="px-3 text-[11px] font-semibold uppercase tracking-wider text-slate-400 mb-2">Hệ thống quản lý</p>
+                
+                <button onclick="navigateTo('dashboard')" data-nav="dashboard" class="nav-btn w-full flex items-center gap-3.5 px-4 py-3.5 rounded-xl text-sm font-medium transition-all bg-lhu-navy text-white shadow-md">
+                    <i class="fa-solid fa-chart-pie w-5 text-center text-lhu-gold"></i>
+                    <span>1. Trang Chủ (Dashboard)</span>
+                </button>
+
+                <button onclick="navigateTo('tuition')" data-nav="tuition" class="nav-btn w-full flex items-center gap-3.5 px-4 py-3.5 rounded-xl text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white transition-all">
+                    <i class="fa-solid fa-file-invoice-dollar w-5 text-center text-amber-400"></i>
+                    <span>2. Học Phí & Học Bổng</span>
+                </button>
+
+                <button onclick="navigateTo('profile')" data-nav="profile" class="nav-btn w-full flex items-center gap-3.5 px-4 py-3.5 rounded-xl text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white transition-all">
+                    <i class="fa-solid fa-user-gear w-5 text-center text-sky-400"></i>
+                    <span>3. Hồ Sơ & Cấu Hình</span>
+                </button>
+
+                <div class="pt-6">
+                    <p class="px-3 text-[11px] font-semibold uppercase tracking-wider text-slate-400 mb-2">Công cụ Đồ án & AI</p>
+                    <button onclick="toggleAIModal()" class="w-full flex items-center gap-3.5 px-4 py-3 rounded-xl text-sm font-medium bg-gradient-to-r from-amber-500/15 to-blue-600/15 border border-amber-500/30 text-amber-300 hover:bg-amber-500/25 transition-all">
+                        <i class="fa-solid fa-robot w-5 text-center text-lhu-gold"></i>
+                        <span>Kiến trúc AI & Dữ liệu JSON</span>
+                    </button>
+                </div>
+            </nav>
+
+            <!-- Footer Sidebar -->
+            <div class="p-4 border-t border-slate-800 text-xs text-slate-400 text-center">
+                <p>Học phần 111101 · Thiết kế Web</p>
+                <p class="text-[11px] text-slate-500 mt-0.5">© 2026 Lac Hong University</p>
+            </div>
+        </aside>
+
+        <!-- KHU VỰC NỘI DUNG CHÍNH -->
+        <div class="flex-1 lg:pl-72 flex flex-col min-w-0">
+            
+            <!-- TOP HEADER BAR -->
+            <header class="sticky top-0 z-20 bg-white/90 backdrop-blur-md border-b border-slate-200 px-4 sm:px-8 py-3.5 flex items-center justify-between gap-4">
+                <div class="flex items-center gap-3">
+                    <!-- Logo thu gọn trên Mobile -->
+                    <div class="lg:hidden w-9 h-9 rounded-xl bg-lhu-navy text-lhu-gold flex items-center justify-center font-extrabold text-sm shadow">
+                        LHU
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <span id="header-breadcrumb" class="text-xs font-semibold text-lhu-navy bg-blue-50 px-2.5 py-0.5 rounded-full">Trang Chủ</span>
+                            <span class="hidden sm:inline-block text-xs text-slate-400">• Học kỳ I (2026 - 2027)</span>
+                        </div>
+                        <h2 id="header-page-title" class="text-base sm:text-lg font-bold text-slate-900 mt-0.5">Tổng quan Tài chính Sinh viên</h2>
+                    </div>
+                </div>
+
+                <!-- Các nút hành động nhanh trên Header -->
+                <div class="flex items-center gap-2.5 sm:gap-3">
+                    <button onclick="toggleAIModal()" class="flex items-center gap-2 px-3 py-2 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-200 text-xs font-semibold transition-all">
+                        <i class="fa-solid fa-wand-magic-sparkles text-lhu-gold"></i>
+                        <span class="hidden sm:inline">AI & JSON Inspector</span>
+                        <span class="sm:hidden">AI Info</span>
+                    </button>
+
+                    <div onclick="navigateTo('profile')" class="cursor-pointer flex items-center gap-2.5 pl-2 pr-3 py-1.5 rounded-full bg-slate-100 hover:bg-slate-200/80 transition-all border border-slate-200">
+                        <div id="header-avatar" class="w-7 h-7 rounded-full bg-lhu-navy text-white flex items-center justify-center text-xs font-bold">
+                            NK
+                        </div>
+                        <div class="hidden md:block text-left">
+                            <p id="header-name" class="text-xs font-bold text-slate-800 leading-none">Nguyễn Minh Khôi</p>
+                            <p id="header-faculty" class="text-[10px] text-slate-500 mt-0.5">Khoa CNTT</p>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- NỘI DUNG TỪNG TRANG (SPA VIEWS) -->
+            <main class="flex-1 p-4 sm:p-6 lg:p-8 max-w-7xl w-full mx-auto space-y-6">
+
+                <!-- ===================================================================== -->
+                <!-- TRANG 1: TRANG CHỦ (DASHBOARD / LANDING PAGE)                         -->
+                <!-- ===================================================================== -->
+                <section id="page-dashboard" class="page-section active space-y-6">
+                    
+                    <!-- 1. Banner / Slide ảnh chương trình Học bổng LHU 2026 (JavaScript Carousel) -->
+                    <div class="relative rounded-2xl overflow-hidden bg-lhu-dark shadow-xl border border-slate-800 h-64 sm:h-72">
+                        <!-- Slide Container -->
+                        <div id="hero-slider" class="relative w-full h-full">
+                            <!-- Slide 1 -->
+                            <div class="slide-item absolute inset-0 opacity-100 flex items-center bg-gradient-to-r from-lhu-dark via-lhu-navy to-blue-900 p-6 sm:p-10">
+                                <div class="max-w-2xl space-y-3 z-10">
+                                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-lhu-gold text-lhu-dark">
+                                        <i class="fa-solid fa-award"></i> QUỸ HỌC BỔNG LHU 2026
+                                    </span>
+                                    <h3 class="text-xl sm:text-3xl font-extrabold text-white leading-tight">
+                                        Học bổng Khuyến khích Tài năng lên đến <span class="text-lhu-gold">100% Học phí</span>
+                                    </h3>
+                                    <p class="text-xs sm:text-sm text-blue-100/90 leading-relaxed">
+                                        Tự động xét duyệt dựa trên điểm GPA tích lũy và điểm rèn luyện. Áp dụng khấu trừ trực tiếp vào hóa đơn học phí học kỳ I năm học 2026 - 2027.
+                                    </p>
+                                    <div class="pt-2 flex flex-wrap gap-3">
+                                        <button onclick="navigateTo('tuition')" class="px-4 py-2.5 rounded-xl bg-lhu-gold hover:bg-amber-400 text-lhu-dark font-bold text-xs sm:text-sm transition-all shadow-lg shadow-amber-500/20">
+                                            Kiểm tra mức học bổng ngay <i class="fa-solid fa-arrow-right ml-1"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <!-- Họa tiết SVG trang trí -->
+                                <div class="hidden md:flex absolute right-10 top-1/2 -translate-y-1/2 w-48 h-48 rounded-full bg-amber-400/10 border border-amber-400/20 items-center justify-center">
+                                    <i class="fa-solid fa-graduation-cap text-7xl text-lhu-gold/80"></i>
+                                </div>
+                            </div>
+
+                            <!-- Slide 2 -->
+                            <div class="slide-item absolute inset-0 opacity-0 pointer-events-none flex items-center bg-gradient-to-r from-slate-900 via-indigo-950 to-lhu-navy p-6 sm:p-10">
+                                <div class="max-w-2xl space-y-3 z-10">
+                                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-sky-400 text-slate-950">
+                                        <i class="fa-solid fa-bolt"></i> THANH TOÁN SỐ KHÔNG TIỀN MẶT
+                                    </span>
+                                    <h3 class="text-xl sm:text-3xl font-extrabold text-white leading-tight">
+                                        Cổng Thanh Toán Học Phí Trực Tuyến <span class="text-sky-400">24/7</span>
+                                    </h3>
+                                    <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">
+                                        Chủ động chọn tín chỉ đăng ký, kê khai bảo hiểm y tế và xuất biên lai điện tử tức thì. Hạn chót hoàn thành học phí HK1: <strong class="text-amber-300">15/12/2026</strong>.
+                                    </p>
+                                    <div class="pt-2">
+                                        <button onclick="navigateTo('tuition')" class="px-4 py-2.5 rounded-xl bg-white hover:bg-slate-100 text-lhu-navy font-bold text-xs sm:text-sm transition-all">
+                                            Vào bảng kê khai học phí <i class="fa-solid fa-calculator ml-1"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="hidden md:flex absolute right-10 top-1/2 -translate-y-1/2 w-48 h-48 rounded-full bg-sky-400/10 border border-sky-400/20 items-center justify-center">
+                                    <i class="fa-solid fa-wallet text-7xl text-sky-400/80"></i>
+                                </div>
+                            </div>
+
+                            <!-- Slide 3 -->
+                            <div class="slide-item absolute inset-0 opacity-0 pointer-events-none flex items-center bg-gradient-to-r from-lhu-navy via-blue-900 to-slate-900 p-6 sm:p-10">
+                                <div class="max-w-2xl space-y-3 z-10">
+                                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-400 text-slate-950">
+                                        <i class="fa-solid fa-robot"></i> TRỢ LÝ AI TÀI CHÍNH LHU
+                                    </span>
+                                    <h3 class="text-xl sm:text-3xl font-extrabold text-white leading-tight">
+                                        Tối Ưu Lộ Trình Học Tập & <span class="text-emerald-400">Săn Học Bổng AI</span>
+                                    </h3>
+                                    <p class="text-xs sm:text-sm text-blue-100 leading-relaxed">
+                                        Hệ thống AI phân tích điểm số hiện tại của bạn để đề xuất mục tiêu GPA nâng hạng học bổng, giúp tiết kiệm hàng triệu đồng mỗi học kỳ.
+                                    </p>
+                                    <div class="pt-2">
+                                        <button onclick="navigateTo('profile')" class="px-4 py-2.5 rounded-xl bg-emerald-400 hover:bg-emerald-300 text-slate-950 font-bold text-xs sm:text-sm transition-all">
+                                            Cập nhật hồ sơ & GPA <i class="fa-solid fa-user-pen ml-1"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="hidden md:flex absolute right-10 top-1/2 -translate-y-1/2 w-48 h-48 rounded-full bg-emerald-400/10 border border-emerald-400/20 items-center justify-center">
+                                    <i class="fa-solid fa-brain text-7xl text-emerald-400/80"></i>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Nút điều khiển Prev / Next -->
+                        <button onclick="prevSlide()" aria-label="Slide trước" class="absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-black/40 hover:bg-black/70 text-white flex items-center justify-center backdrop-blur-sm transition-all z-20">
+                            <i class="fa-solid fa-chevron-left text-xs"></i>
+                        </button>
+                        <button onclick="nextSlide()" aria-label="Slide tiếp theo" class="absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-black/40 hover:bg-black/70 text-white flex items-center justify-center backdrop-blur-sm transition-all z-20">
+                            <i class="fa-solid fa-chevron-right text-xs"></i>
+                        </button>
+
+                        <!-- Chấm chỉ báo (Indicators) -->
+                        <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-2 z-20">
+                            <button onclick="goToSlide(0)" class="slide-dot w-6 h-2 rounded-full bg-lhu-gold transition-all"></button>
+                            <button onclick="goToSlide(1)" class="slide-dot w-2 h-2 rounded-full bg-white/40 hover:bg-white/70 transition-all"></button>
+                            <button onclick="goToSlide(2)" class="slide-dot w-2 h-2 rounded-full bg-white/40 hover:bg-white/70 transition-all"></button>
+                        </div>
+                    </div>
+
+                    <!-- 2. CSS Grid 4 Thẻ KPI Tổng quan (Đổ tự động từ JSON mockDatabase) -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 sm:gap-5">
+                        <!-- Card 1: GPA Hiện tại -->
+                        <div class="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-sm hover:shadow-md transition-all">
+                            <div class="flex items-center justify-between">
+                                <span class="text-xs font-semibold uppercase tracking-wider text-slate-500">GPA Tích Lũy</span>
+                                <div class="w-10 h-10 rounded-xl bg-blue-50 text-lhu-navy flex items-center justify-center">
+                                    <i class="fa-solid fa-chart-line text-lg"></i>
+                                </div>
+                            </div>
+                            <div class="mt-3 flex items-baseline gap-2">
+                                <h4 id="dash-gpa" class="text-2xl sm:text-3xl font-extrabold text-slate-900">3.65</h4>
+                                <span class="text-xs font-medium text-slate-400">/ 4.00</span>
+                            </div>
+                            <p id="dash-rank" class="mt-2 text-xs font-medium text-emerald-600 flex items-center gap-1">
+                                <i class="fa-solid fa-circle-check"></i> Xếp loại học lực: Xuất sắc
+                            </p>
+                        </div>
+
+                        <!-- Card 2: Mức Học Bổng Đủ Điều Kiện -->
+                        <div class="bg-white rounded-2xl p-5 border border-amber-200/80 shadow-sm hover:shadow-md transition-all relative overflow-hidden">
+                            <div class="flex items-center justify-between">
+                                <span class="text-xs font-semibold uppercase tracking-wider text-amber-700">Học Bổng Đạt Được</span>
+                                <div class="w-10 h-10 rounded-xl bg-amber-100 text-lhu-gold flex items-center justify-center">
+                                    <i class="fa-solid fa-medal text-lg"></i>
+                                </div>
+                            </div>
+                            <div class="mt-3 flex items-baseline gap-2">
+                                <h4 id="dash-scholarship-percent" class="text-2xl sm:text-3xl font-extrabold text-amber-600">50%</h4>
+                                <span id="dash-scholarship-name" class="text-xs font-semibold text-slate-600 truncate">Loại Giỏi</span>
+                            </div>
+                            <p id="dash-scholarship-amount" class="mt-2 text-xs font-medium text-slate-600">
+                                Giảm trừ: <strong class="text-slate-900">6.300.000 đ</strong>
+                            </p>
+                        </div>
+
+                        <!-- Card 3: Học Phí Thực Tế Còn Nợ -->
+                        <div class="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-sm hover:shadow-md transition-all">
+                            <div class="flex items-center justify-between">
+                                <span class="text-xs font-semibold uppercase tracking-wider text-slate-500">Học Phí Cần Đóng</span>
+                                <div class="w-10 h-10 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center">
+                                    <i class="fa-solid fa-money-bill-wave text-lg"></i>
+                                </div>
+                            </div>
+                            <div class="mt-3">
+                                <h4 id="dash-net-tuition" class="text-2xl sm:text-3xl font-extrabold text-lhu-navy">6.300.000 đ</h4>
+                            </div>
+                            <p id="dash-credits-summary" class="mt-2 text-xs font-medium text-slate-500">
+                                Đã chọn <strong class="text-slate-800">5 môn</strong> (14 tín chỉ)
+                            </p>
+                        </div>
+
+                        <!-- Card 4: Hạn Đóng Học Phí Gần Nhất -->
+                        <div class="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-sm hover:shadow-md transition-all">
+                            <div class="flex items-center justify-between">
+                                <span class="text-xs font-semibold uppercase tracking-wider text-slate-500">Hạn Chót Nộp Phí</span>
+                                <div class="w-10 h-10 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center">
+                                    <i class="fa-solid fa-calendar-clock text-lg"></i>
+                                </div>
+                            </div>
+                            <div class="mt-3">
+                                <h4 id="dash-deadline" class="text-2xl sm:text-3xl font-extrabold text-slate-900">15/12/2026</h4>
+                            </div>
+                            <p class="mt-2 text-xs font-medium text-amber-600 flex items-center gap-1">
+                                <i class="fa-solid fa-clock"></i> Còn 22 ngày để hoàn tất
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- 3. Khu vực Phím tắt Điều hướng nhanh & Trợ lý AI Phân tích Tóm tắt -->
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        <!-- Cột trái (2/3): Phím tắt điều hướng & Lịch sử giao dịch gần đây -->
+                        <div class="lg:col-span-2 bg-white rounded-2xl p-6 border border-slate-200/80 shadow-sm space-y-5">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <h3 class="text-base font-bold text-slate-900">Phím Tắt Chức Năng Nhanh</h3>
+                                    <p class="text-xs text-slate-500">Truy cập nhanh các nghiệp vụ tài chính và hồ sơ cá nhân</p>
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <button onclick="navigateTo('tuition')" class="group flex items-start gap-4 p-4 rounded-xl border border-slate-200 hover:border-lhu-navy hover:bg-blue-50/40 text-left transition-all">
+                                    <div class="w-12 h-12 rounded-xl bg-lhu-navy text-white flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+                                        <i class="fa-solid fa-file-invoice-dollar text-xl text-lhu-gold"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="text-sm font-bold text-slate-900 group-hover:text-lhu-navy">Kê khai & Đóng Học phí</h4>
+                                        <p class="text-xs text-slate-500 mt-1 leading-relaxed">Chọn môn học, tính tự động tiền giảm trừ học bổng và xuất biên lai.</p>
+                                    </div>
+                                </button>
+
+                                <button onclick="navigateTo('profile')" class="group flex items-start gap-4 p-4 rounded-xl border border-slate-200 hover:border-lhu-gold hover:bg-amber-50/40 text-left transition-all">
+                                    <div class="w-12 h-12 rounded-xl bg-amber-500 text-lhu-dark flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+                                        <i class="fa-solid fa-user-check text-xl"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="text-sm font-bold text-slate-900 group-hover:text-amber-700">Cập nhật Hồ sơ & GPA</h4>
+                                        <p class="text-xs text-slate-500 mt-1 leading-relaxed">Chỉnh sửa thông tin liên hệ, điều chỉnh GPA và thiết lập thông báo.</p>
+                                    </div>
+                                </button>
+                            </div>
+
+                            <!-- Bảng tóm tắt thông tin học vụ đổ từ JSON -->
+                            <div class="pt-2">
+                                <h4 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3">Thông tin Sinh viên từ Cơ sở dữ liệu JSON</h4>
+                                <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 bg-slate-50 p-4 rounded-xl border border-slate-200/60 text-xs">
+                                    <div>
+                                        <span class="text-slate-400 block">Họ và tên:</span>
+                                        <strong id="dash-info-name" class="text-slate-800 text-sm">Nguyễn Minh Khôi</strong>
+                                    </div>
+                                    <div>
+                                        <span class="text-slate-400 block">Mã số sinh viên:</span>
+                                        <strong id="dash-info-mssv" class="text-slate-800 font-mono text-sm">122001458</strong>
+                                    </div>
+                                    <div>
+                                        <span class="text-slate-400 block">Khoa / Ngành:</span>
+                                        <strong id="dash-info-faculty" class="text-slate-800">Công nghệ Thông tin</strong>
+                                    </div>
+                                    <div>
+                                        <span class="text-slate-400 block">Điểm rèn luyện:</span>
+                                        <strong id="dash-info-drl" class="text-emerald-700">88 / 100 (Tốt)</strong>
+                                    </div>
+                                    <div>
+                                        <span class="text-slate-400 block">Email sinh viên:</span>
+                                        <strong id="dash-info-email" class="text-slate-800 truncate block">khoi.nm122@lhu.edu.vn</strong>
+                                    </div>
+                                    <div>
+                                        <span class="text-slate-400 block">Trạng thái ví LHU:</span>
+                                        <strong class="text-blue-600"><i class="fa-solid fa-shield-check"></i> Đã liên kết</strong>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Cột phải (1/3): AI Financial Advisor Box -->
+                        <div class="bg-gradient-to-b from-lhu-dark to-lhu-navy text-white rounded-2xl p-6 shadow-lg flex flex-col justify-between border border-slate-700">
+                            <div>
+                                <div class="flex items-center gap-2.5 mb-4">
+                                    <div class="w-9 h-9 rounded-xl bg-lhu-gold/20 border border-lhu-gold/40 flex items-center justify-center text-lhu-gold">
+                                        <i class="fa-solid fa-robot"></i>
+                                    </div>
+                                    <div>
+                                        <h3 class="text-sm font-bold text-white">AI Financial Advisor</h3>
+                                        <span class="text-[11px] text-amber-300 flex items-center gap-1">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span> Phân tích thời gian thực
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div id="dash-ai-insight" class="space-y-3 text-xs text-slate-200 leading-relaxed bg-white/10 p-4 rounded-xl border border-white/10">
+                                    <!-- Nội dung AI tự động render bằng JS -->
+                                </div>
+                            </div>
+
+                            <button onclick="navigateTo('tuition')" class="mt-5 w-full py-2.5 px-4 rounded-xl bg-lhu-gold hover:bg-amber-400 text-lhu-dark font-bold text-xs transition-all flex items-center justify-center gap-2">
+                                <span>Mô phỏng nâng GPA & Tính học phí</span>
+                                <i class="fa-solid fa-sliders"></i>
+                            </button>
+                        </div>
+                    </div>
+                </section>
+
+
+                <!-- ===================================================================== -->
+                <!-- TRANG 2: TRANG CHI TIẾT CHỨC NĂNG (TRA CỨU HỌC PHÍ & HỌC BỔNG)        -->
+                <!-- ===================================================================== -->
+                <section id="page-tuition" class="page-section space-y-6">
+                    
+                    <!-- PHẦN A: XÉT DUYỆT HỌC BỔNG TỰ ĐỘNG (CSS3 CARDS) -->
+                    <div class="bg-white rounded-2xl p-5 sm:p-6 border border-slate-200/80 shadow-sm space-y-5">
+                        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-100 pb-4">
+                            <div>
+                                <span class="text-xs font-bold uppercase tracking-wider text-amber-600">Bước 1 · Xét duyệt Học bổng Tự động</span>
+                                <h3 class="text-lg font-bold text-slate-900 mt-0.5">Bảng Mức Học Bổng Khuyến Khích Học Tập LHU</h3>
+                                <p class="text-xs text-slate-500">Hệ thống tự động làm nổi bật (highlight) mức học bổng tương ứng với điểm GPA hiện tại của bạn.</p>
+                            </div>
+
+                            <!-- Thanh trượt & Ô nhập giả lập GPA trực tiếp -->
+                            <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200 flex flex-col sm:flex-row items-start sm:items-center gap-3">
+                                <label for="gpa-simulator-input" class="text-xs font-bold text-slate-700 whitespace-nowrap">
+                                    <i class="fa-solid fa-flask text-lhu-navy mr-1"></i> Thử nghiệm GPA:
+                                </label>
+                                <div class="flex items-center gap-2.5 w-full sm:w-auto">
+                                    <input type="range" id="gpa-simulator-range" min="0" max="4.0" step="0.05" value="3.65" class="w-28 sm:w-32 accent-lhu-navy cursor-pointer">
+                                    <input type="number" id="gpa-simulator-input" min="0" max="4.0" step="0.01" value="3.65" class="w-20 px-2.5 py-1.5 text-sm font-bold text-center text-lhu-navy bg-white border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-lhu-navy">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 3 Thẻ Mức Học Bổng (CSS3 Cards) -->
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+                            <!-- Card Học Bổng 1: Loại Khá (30%) -->
+                            <div id="sch-card-kha" class="scholarship-card relative rounded-2xl p-5 border-2 border-slate-200 bg-white transition-all duration-300">
+                                <div class="flex items-center justify-between mb-3">
+                                    <span class="px-3 py-1 rounded-full text-xs font-bold bg-sky-100 text-sky-800">Hạng Khá</span>
+                                    <span class="sch-badge hidden px-2.5 py-0.5 rounded-full text-[11px] font-extrabold bg-lhu-gold text-lhu-dark shadow-sm">
+                                        <i class="fa-solid fa-check-circle mr-1"></i> ĐANG ĐẠT ĐƯỢC
+                                    </span>
+                                </div>
+                                <div class="flex items-baseline gap-1 my-2">
+                                    <span class="text-3xl font-extrabold text-slate-900">30%</span>
+                                    <span class="text-xs font-medium text-slate-500">học phí học kỳ</span>
+                                </div>
+                                <p class="text-xs text-slate-600 mb-4">Dành cho sinh viên có kết quả học tập khá và tích cực tham gia hoạt động.</p>
+                                <ul class="space-y-1.5 text-xs text-slate-600 border-t border-slate-100 pt-3">
+                                    <li><i class="fa-solid fa-check text-emerald-500 mr-1.5"></i> GPA từ <strong>3.20</strong> đến <strong>3.59</strong></li>
+                                    <li><i class="fa-solid fa-check text-emerald-500 mr-1.5"></i> Điểm rèn luyện ≥ 70 điểm</li>
+                                    <li><i class="fa-solid fa-check text-emerald-500 mr-1.5"></i> Không có môn thi lại trong kỳ</li>
+                                </ul>
+                            </div>
+
+                            <!-- Card Học Bổng 2: Loại Giỏi (50%) -->
+                            <div id="sch-card-gioi" class="scholarship-card relative rounded-2xl p-5 border-2 border-slate-200 bg-white transition-all duration-300">
+                                <div class="flex items-center justify-between mb-3">
+                                    <span class="px-3 py-1 rounded-full text-xs font-bold bg-blue-100 text-lhu-navy">Hạng Giỏi</span>
+                                    <span class="sch-badge hidden px-2.5 py-0.5 rounded-full text-[11px] font-extrabold bg-lhu-gold text-lhu-dark shadow-sm">
+                                        <i class="fa-solid fa-check-circle mr-1"></i> ĐANG ĐẠT ĐƯỢC
+                                    </span>
+                                </div>
+                                <div class="flex items-baseline gap-1 my-2">
+                                    <span class="text-3xl font-extrabold text-lhu-navy">50%</span>
+                                    <span class="text-xs font-medium text-slate-500">học phí học kỳ</span>
+                                </div>
+                                <p class="text-xs text-slate-600 mb-4">Học bổng khuyến khích sinh viên đạt thành tích học tập giỏi toàn diện.</p>
+                                <ul class="space-y-1.5 text-xs text-slate-600 border-t border-slate-100 pt-3">
+                                    <li><i class="fa-solid fa-check text-emerald-500 mr-1.5"></i> GPA từ <strong>3.60</strong> đến <strong>3.89</strong></li>
+                                    <li><i class="fa-solid fa-check text-emerald-500 mr-1.5"></i> Điểm rèn luyện ≥ 80 điểm</li>
+                                    <li><i class="fa-solid fa-check text-emerald-500 mr-1.5"></i> Đăng ký tối thiểu 12 tín chỉ</li>
+                                </ul>
+                            </div>
+
+                            <!-- Card Học Bổng 3: Loại Xuất Sắc (100%) -->
+                            <div id="sch-card-xuatsac" class="scholarship-card relative rounded-2xl p-5 border-2 border-slate-200 bg-white transition-all duration-300">
+                                <div class="flex items-center justify-between mb-3">
+                                    <span class="px-3 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-800">Hạng Xuất Sắc</span>
+                                    <span class="sch-badge hidden px-2.5 py-0.5 rounded-full text-[11px] font-extrabold bg-lhu-gold text-lhu-dark shadow-sm">
+                                        <i class="fa-solid fa-crown mr-1"></i> ĐANG ĐẠT ĐƯỢC
+                                    </span>
+                                </div>
+                                <div class="flex items-baseline gap-1 my-2">
+                                    <span class="text-3xl font-extrabold text-amber-600">100%</span>
+                                    <span class="text-xs font-medium text-slate-500">miễn toàn bộ học phí</span>
+                                </div>
+                                <p class="text-xs text-slate-600 mb-4">Học bổng danh giá nhất dành cho sinh viên xuất sắc tiêu biểu cấp Khoa/Trường.</p>
+                                <ul class="space-y-1.5 text-xs text-slate-600 border-t border-slate-100 pt-3">
+                                    <li><i class="fa-solid fa-check text-emerald-500 mr-1.5"></i> GPA từ <strong>3.90</strong> đến <strong>4.00</strong></li>
+                                    <li><i class="fa-solid fa-check text-emerald-500 mr-1.5"></i> Điểm rèn luyện ≥ 90 điểm</li>
+                                    <li><i class="fa-solid fa-check text-emerald-500 mr-1.5"></i> Ưu tiên xét học bổng Doanh nghiệp</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- Thanh gợi ý AI ngay dưới thẻ học bổng -->
+                        <div id="tuition-ai-banner" class="p-3.5 rounded-xl bg-blue-50 border border-blue-200 flex items-center gap-3 text-xs text-lhu-navy">
+                            <i class="fa-solid fa-wand-magic-sparkles text-base text-lhu-gold shrink-0"></i>
+                            <p id="tuition-ai-text" class="font-medium"></p>
+                        </div>
+                    </div>
+
+                    <!-- PHẦN B: BẢNG KÊ KHAI MÔN HỌC & TÍNH TOÁN HỌC PHÍ THỜI GIAN THỰC -->
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        
+                        <!-- Cột trái (2/3): Danh sách môn học có Search, Filter & Checkbox (change event) -->
+                        <div class="lg:col-span-2 bg-white rounded-2xl p-5 sm:p-6 border border-slate-200/80 shadow-sm space-y-4">
+                            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                                <div>
+                                    <span class="text-xs font-bold uppercase tracking-wider text-lhu-navy">Bước 2 · Chọn Học Phần Đăng Ký</span>
+                                    <h3 class="text-base font-bold text-slate-900">Danh Mục Môn Học & Đơn Giá Tín Chỉ</h3>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <button onclick="selectAllCourses(true)" class="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-xs font-semibold text-slate-700 transition-all">Chọn tất cả</button>
+                                    <button onclick="selectAllCourses(false)" class="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-xs font-semibold text-slate-700 transition-all">Bỏ chọn</button>
+                                </div>
+                            </div>
+
+                            <!-- Thanh Search & Filter -->
+                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                                <div class="sm:col-span-2 relative">
+                                    <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+                                    <input type="text" id="course-search" placeholder="Tìm theo mã môn hoặc tên môn học (VD: Thiết kế Web)..." class="w-full pl-9 pr-4 py-2.5 text-xs sm:text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:bg-white focus:border-lhu-navy transition-all">
+                                </div>
+                                <div>
+                                    <select id="course-filter-type" class="w-full px-3.5 py-2.5 text-xs sm:text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:bg-white focus:border-lhu-navy font-medium text-slate-700">
+                                        <option value="all">Tất cả loại môn</option>
+                                        <option value="Bắt buộc">Môn Bắt buộc</option>
+                                        <option value="Tự chọn">Môn Tự chọn</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- Bảng danh sách môn học Responsive -->
+                            <div class="overflow-x-auto border border-slate-200 rounded-xl">
+                                <table class="w-full text-left border-collapse">
+                                    <thead>
+                                        <tr class="bg-slate-100/80 text-slate-600 text-[11px] uppercase tracking-wider border-b border-slate-200">
+                                            <th class="py-3 px-3.5 w-10 text-center">Chọn</th>
+                                            <th class="py-3 px-3.5">Mã & Tên Học Phần</th>
+                                            <th class="py-3 px-3.5 text-center">Loại</th>
+                                            <th class="py-3 px-3.5 text-center">Tín chỉ</th>
+                                            <th class="py-3 px-3.5 text-right">Thành tiền</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="courses-table-body" class="divide-y divide-slate-100 text-xs sm:text-sm">
+                                        <!-- Render tự động bằng JavaScript -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Cột phải (1/3): Bảng Tổng Hợp Công Nợ & Form Giả Lập Thanh Toán HTML5 -->
+                        <div class="bg-white rounded-2xl p-5 sm:p-6 border border-slate-200/80 shadow-sm space-y-5 h-fit sticky top-20">
+                            <div>
+                                <span class="text-xs font-bold uppercase tracking-wider text-emerald-600">Bước 3 · Quyết Toán Học Phí</span>
+                                <h3 class="text-base font-bold text-slate-900 mt-0.5">Chi Tiết Khoản Phí Cần Đóng</h3>
+                            </div>
+
+                            <!-- Bảng tính toán tự động -->
+                            <div class="bg-slate-50 rounded-xl p-4 border border-slate-200/80 space-y-3 text-xs sm:text-sm">
+                                <div class="flex justify-between items-center text-slate-600">
+                                    <span>Tổng số tín chỉ đã chọn:</span>
+                                    <strong id="calc-total-credits" class="text-slate-900">14 tín chỉ</strong>
+                                </div>
+                                <div class="flex justify-between items-center text-slate-600">
+                                    <span>Học phí gốc tạm tính:</span>
+                                    <strong id="calc-raw-tuition" class="text-slate-900">12.600.000 đ</strong>
+                                </div>
+                                <div class="flex justify-between items-center text-emerald-700">
+                                    <span>Giảm trừ Học bổng (<span id="calc-sch-rate">50%</span>):</span>
+                                    <strong id="calc-sch-discount">- 6.300.000 đ</strong>
+                                </div>
+                                <div class="flex justify-between items-center text-slate-600">
+                                    <span>Phí BHYT / Khoản thu bổ sung:</span>
+                                    <strong id="calc-extra-fee-display" class="text-slate-900">680.000 đ</strong>
+                                </div>
+                                <div class="pt-3 border-t border-slate-200 flex justify-between items-center">
+                                    <span class="font-bold text-slate-900">CÒN NỢ PHẢI ĐÓNG:</span>
+                                    <span id="calc-final-debt" class="text-xl font-extrabold text-rose-600">6.980.000 đ</span>
+                                </div>
+                            </div>
+
+                            <!-- Form HTML5 Kê khai Phí Bổ Sung & Ngày Dự Kiến Thanh Toán -->
+                            <form id="payment-simulation-form" class="space-y-4">
+                                <div>
+                                    <label for="extra-fee-input" class="block text-xs font-bold text-slate-700 mb-1.5">
+                                        Phí BHYT / Khoản thu khác (VNĐ) <span class="text-slate-400 font-normal">(HTML5 Number)</span>
+                                    </label>
+                                    <input type="number" id="extra-fee-input" value="680000" min="0" max="50000000" step="10000" class="w-full px-3.5 py-2.5 text-sm font-semibold bg-white border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-lhu-navy">
+                                </div>
+
+                                <div>
+                                    <label for="payment-date-input" class="block text-xs font-bold text-slate-700 mb-1.5">
+                                        Ngày dự kiến thanh toán <span class="text-slate-400 font-normal">(HTML5 Date)</span>
+                                    </label>
+                                    <input type="date" id="payment-date-input" required class="w-full px-3.5 py-2.5 text-sm font-medium bg-white border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-lhu-navy">
+                                </div>
+
+                                <button type="submit" class="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-lhu-navy to-blue-700 hover:from-blue-900 hover:to-blue-800 text-white font-bold text-sm shadow-lg shadow-blue-900/20 transition-all flex items-center justify-center gap-2">
+                                    <i class="fa-solid fa-receipt"></i>
+                                    <span>Xuất Phiếu Xác Nhận Thanh Toán</span>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </section>
+
+
+                <!-- ===================================================================== -->
+                <!-- TRANG 3: TRANG QUẢN LÝ HỒ SƠ & CẤU HÌNH (PROFILE & SETTINGS PAGE)      -->
+                <!-- ===================================================================== -->
+                <section id="page-profile" class="page-section space-y-6">
+                    <div class="bg-white rounded-2xl p-6 sm:p-8 border border-slate-200/80 shadow-sm max-w-4xl mx-auto">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-slate-200">
+                            <div class="flex items-center gap-4">
+                                <div id="profile-big-avatar" class="w-16 h-16 rounded-2xl bg-gradient-to-br from-lhu-navy to-blue-700 text-lhu-gold flex items-center justify-center text-2xl font-extrabold shadow-md">
+                                    NK
+                                </div>
+                                <div>
+                                    <span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-emerald-100 text-emerald-800">Sinh viên Chính quy</span>
+                                    <h3 id="profile-display-name" class="text-xl font-bold text-slate-900 mt-1">Nguyễn Minh Khôi</h3>
+                                    <p class="text-xs text-slate-500">Cập nhật hồ sơ cá nhân & cấu hình nhận thông báo học phí tự động</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- HTML5 Form với đầy đủ các loại Input & Regex Validation -->
+                        <form id="profile-settings-form" novalidate class="mt-6 space-y-6">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                                <!-- 1. Họ tên (text) -->
+                                <div>
+                                    <label for="prof-name" class="block text-xs font-bold text-slate-700 mb-1.5">
+                                        Họ và tên sinh viên <span class="text-rose-500">*</span>
+                                    </label>
+                                    <input type="text" id="prof-name" required placeholder="Nhập họ và tên đầy đủ" class="w-full px-4 py-2.5 text-sm bg-white border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-lhu-navy">
+                                    <p id="err-prof-name" class="hidden mt-1.5 text-xs text-rose-600 font-medium"><i class="fa-solid fa-circle-exclamation mr-1"></i>Vui lòng nhập họ tên hợp lệ (tối thiểu 3 ký tự).</p>
+                                </div>
+
+                                <!-- 2. Mã số sinh viên (text readonly) -->
+                                <div>
+                                    <label for="prof-mssv" class="block text-xs font-bold text-slate-700 mb-1.5">
+                                        Mã số sinh viên (MSSV) <span class="text-slate-400 font-normal">(Cố định)</span>
+                                    </label>
+                                    <input type="text" id="prof-mssv" readonly class="w-full px-4 py-2.5 text-sm font-mono bg-slate-100 text-slate-500 border border-slate-200 rounded-xl cursor-not-allowed">
+                                </div>
+
+                                <!-- 3. Email sinh viên (email + Regex) -->
+                                <div>
+                                    <label for="prof-email" class="block text-xs font-bold text-slate-700 mb-1.5">
+                                        Email liên hệ / Email LHU <span class="text-rose-500">*</span>
+                                    </label>
+                                    <input type="email" id="prof-email" required placeholder="ten.mssv@lhu.edu.vn" class="w-full px-4 py-2.5 text-sm bg-white border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-lhu-navy">
+                                    <p id="err-prof-email" class="hidden mt-1.5 text-xs text-rose-600 font-medium"><i class="fa-solid fa-circle-exclamation mr-1"></i>Email không đúng định dạng chuẩn (VD: sinhvien@lhu.edu.vn).</p>
+                                </div>
+
+                                <!-- 4. Số điện thoại Việt Nam (tel + Regex) -->
+                                <div>
+                                    <label for="prof-phone" class="block text-xs font-bold text-slate-700 mb-1.5">
+                                        Số điện thoại (VN) <span class="text-rose-500">*</span>
+                                    </label>
+                                    <input type="tel" id="prof-phone" required placeholder="0912345678 hoặc +84912345678" class="w-full px-4 py-2.5 text-sm bg-white border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-lhu-navy">
+                                    <p id="err-prof-phone" class="hidden mt-1.5 text-xs text-rose-600 font-medium"><i class="fa-solid fa-circle-exclamation mr-1"></i>Số điện thoại VN không hợp lệ (Đầu số 03, 05, 07, 08, 09 gồm 10 số).</p>
+                                </div>
+
+                                <!-- 5. Ngày sinh (date) -->
+                                <div>
+                                    <label for="prof-dob" class="block text-xs font-bold text-slate-700 mb-1.5">
+                                        Ngày sinh <span class="text-rose-500">*</span>
+                                    </label>
+                                    <input type="date" id="prof-dob" required class="w-full px-4 py-2.5 text-sm bg-white border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-lhu-navy">
+                                    <p id="err-prof-dob" class="hidden mt-1.5 text-xs text-rose-600 font-medium"><i class="fa-solid fa-circle-exclamation mr-1"></i>Vui lòng chọn ngày sinh hợp lệ.</p>
+                                </div>
+
+                                <!-- 6. Khoa / Ngành đào tạo (select) -->
+                                <div>
+                                    <label for="prof-faculty" class="block text-xs font-bold text-slate-700 mb-1.5">
+                                        Khoa / Ngành đào tạo
+                                    </label>
+                                    <select id="prof-faculty" class="w-full px-4 py-2.5 text-sm bg-white border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-lhu-navy">
+                                        <option value="Công nghệ Thông tin">Khoa Công nghệ Thông tin</option>
+                                        <option value="Quản trị - Kinh tế Quốc tế">Khoa Quản trị - Kinh tế Quốc tế</option>
+                                        <option value="Cơ điện - Điện tử">Khoa Cơ điện - Điện tử</option>
+                                        <option value="Dược">Khoa Dược</option>
+                                        <option value="Đông Phương học">Khoa Đông Phương học</option>
+                                        <option value="Tài chính - Kế toán">Khoa Tài chính - Kế toán</option>
+                                    </select>
+                                </div>
+
+                                <!-- 7. GPA Tích lũy (number step="0.01" min="0" max="4") -->
+                                <div>
+                                    <label for="prof-gpa" class="block text-xs font-bold text-slate-700 mb-1.5">
+                                        Điểm GPA Tích lũy (Thang 4.0) <span class="text-rose-500">*</span>
+                                    </label>
+                                    <input type="number" id="prof-gpa" step="0.01" min="0" max="4" required class="w-full px-4 py-2.5 text-sm font-bold text-lhu-navy bg-white border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-lhu-navy">
+                                    <p id="err-prof-gpa" class="hidden mt-1.5 text-xs text-rose-600 font-medium"><i class="fa-solid fa-circle-exclamation mr-1"></i>GPA phải nằm trong khoảng từ 0.00 đến 4.00.</p>
+                                </div>
+
+                                <!-- 8. Điểm rèn luyện (number) -->
+                                <div>
+                                    <label for="prof-drl" class="block text-xs font-bold text-slate-700 mb-1.5">
+                                        Điểm Rèn Luyện (Thang 100)
+                                    </label>
+                                    <input type="number" id="prof-drl" min="0" max="100" required class="w-full px-4 py-2.5 text-sm font-bold text-emerald-700 bg-white border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-lhu-navy">
+                                </div>
+                            </div>
+
+                            <!-- Cấu hình Thông báo & Phương thức nhận biên lai (Radio & Checkbox) -->
+                            <div class="p-4 sm:p-5 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-4">
+                                <h4 class="text-xs font-bold uppercase tracking-wider text-slate-600">Cấu hình Nhắc nợ Học phí & Xuất Biên lai</h4>
+                                
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs sm:text-sm">
+                                    <div class="space-y-2">
+                                        <p class="font-semibold text-slate-700">Kênh nhận thông báo nhắc hạn:</p>
+                                        <label class="flex items-center gap-2.5 cursor-pointer">
+                                            <input type="checkbox" id="notif-email" checked class="w-4 h-4 rounded text-lhu-navy accent-lhu-navy">
+                                            <span>Gửi qua Email sinh viên LHU</span>
+                                        </label>
+                                        <label class="flex items-center gap-2.5 cursor-pointer">
+                                            <input type="checkbox" id="notif-sms" checked class="w-4 h-4 rounded text-lhu-navy accent-lhu-navy">
+                                            <span>Nhắn tin SMS / Zalo OA LHU</span>
+                                        </label>
+                                    </div>
+
+                                    <div class="space-y-2">
+                                        <p class="font-semibold text-slate-700">Hình thức khấu trừ học bổng:</p>
+                                        <label class="flex items-center gap-2.5 cursor-pointer">
+                                            <input type="radio" name="scholarship-mode" value="auto-deduct" checked class="w-4 h-4 text-lhu-navy accent-lhu-navy">
+                                            <span>Khấu trừ thẳng vào học phí kỳ này</span>
+                                        </label>
+                                        <label class="flex items-center gap-2.5 cursor-pointer">
+                                            <input type="radio" name="scholarship-mode" value="wallet" class="w-4 h-4 text-lhu-navy accent-lhu-navy">
+                                            <span>Chuyển tiền mặt vào Ví sinh viên</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Nút Submit & Khôi phục -->
+                            <div class="flex flex-col sm:flex-row items-center justify-end gap-3 pt-2">
+                                <button type="button" onclick="loadProfileForm()" class="w-full sm:w-auto px-5 py-2.5 rounded-xl border border-slate-300 text-slate-700 hover:bg-slate-100 font-semibold text-sm transition-all">
+                                    Hoàn tác thay đổi
+                                </button>
+                                <button type="submit" class="w-full sm:w-auto px-6 py-2.5 rounded-xl bg-lhu-navy hover:bg-blue-900 text-white font-bold text-sm shadow-lg shadow-blue-900/20 transition-all flex items-center justify-center gap-2">
+                                    <i class="fa-solid fa-floppy-disk"></i>
+                                    <span>Lưu thay đổi & Đồng bộ hệ thống</span>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </section>
+
+            </main>
+        </div>
     </div>
-    <nav class="nav-menu">
-      <ul>
-        <li><a href="index.html" class="active">Trang chủ</a></li>
-        <li><a href="financial.html">Học phí & Học bổng</a></li>
-        <li><a href="profile.html">Hồ sơ cá nhân</a></li>
-      </ul>
+
+    <!-- ==================== BOTTOM NAVIGATION BAR CHO MOBILE ==================== -->
+    <nav class="lg:hidden fixed bottom-0 inset-x-0 bg-white border-t border-slate-200 shadow-2xl z-30 flex justify-around items-center py-2 px-1">
+        <button onclick="navigateTo('dashboard')" data-nav="dashboard" class="mobile-nav-btn flex flex-col items-center justify-center py-1 px-3 rounded-xl text-lhu-navy font-bold">
+            <i class="fa-solid fa-chart-pie text-lg"></i>
+            <span class="text-[10px] mt-1">Trang Chủ</span>
+        </button>
+        <button onclick="navigateTo('tuition')" data-nav="tuition" class="mobile-nav-btn flex flex-col items-center justify-center py-1 px-3 rounded-xl text-slate-500">
+            <i class="fa-solid fa-file-invoice-dollar text-lg"></i>
+            <span class="text-[10px] mt-1">Học Phí & HB</span>
+        </button>
+        <button onclick="navigateTo('profile')" data-nav="profile" class="mobile-nav-btn flex flex-col items-center justify-center py-1 px-3 rounded-xl text-slate-500">
+            <i class="fa-solid fa-user-gear text-lg"></i>
+            <span class="text-[10px] mt-1">Hồ Sơ</span>
+        </button>
+        <button onclick="toggleAIModal()" class="flex flex-col items-center justify-center py-1 px-3 rounded-xl text-amber-600">
+            <i class="fa-solid fa-robot text-lg"></i>
+            <span class="text-[10px] mt-1">AI & JSON</span>
+        </button>
     </nav>
-  </header>
 
-  <main class="container">
-    <!-- Phần chào mừng dạng Banner nổi bật -->
-    <section class="welcome-banner">
-      <div class="welcome-text">
-        <h1 class="page-title">Tổng quan Tài chính Sinh viên</h1>
-        <p class="welcome-subtitle">Xin chào, <strong id="dash-student-name">...</strong> <span class="badge-mssv">MSSV: <span id="dash-student-id">...</span></span></p>
-      </div>
-    </section>
+    <!-- ==================== MODAL 1: PHIẾU XÁC NHẬN THANH TOÁN ==================== -->
+    <div id="receipt-modal" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-200 space-y-5 animate-[fadeIn_0.25s_ease-out]">
+            <div class="text-center space-y-2">
+                <div class="w-14 h-14 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto text-2xl">
+                    <i class="fa-solid fa-circle-check"></i>
+                </div>
+                <h3 class="text-lg font-extrabold text-slate-900">Phiếu Kê Khai & Xác Nhận Học Phí</h3>
+                <p class="text-xs text-slate-500">Phòng Kế hoạch - Tài chính · Đại học Lạc Hồng</p>
+            </div>
 
-    <!-- Các thẻ thống kê đổ dữ liệu từ JSON -->
-    <section class="dashboard-section">
-      <div class="grid-cards" id="dashboard-widgets">
-        <!-- Widget sẽ được render tự động từ JS -->
-      </div>
-    </section>
+            <div id="receipt-content" class="bg-slate-50 p-4 rounded-xl border border-dashed border-slate-300 space-y-2.5 text-xs">
+                <!-- Nội dung biên lai render bằng JS -->
+            </div>
 
-    <!-- Phím tắt điều hướng nhanh -->
-    <section class="action-section">
-      <div class="card action-card">
-        <div class="action-header">
-          <h2>Thao tác nhanh</h2>
-          <p>Lựa chọn các chức năng thường dùng bên dưới</p>
+            <div class="flex gap-3">
+                <button onclick="closeReceiptModal()" class="flex-1 py-2.5 rounded-xl bg-lhu-navy hover:bg-blue-900 text-white font-bold text-xs transition-all">
+                    Đóng phiếu xác nhận
+                </button>
+            </div>
         </div>
-        <div class="action-buttons">
-          <a href="financial.html" class="btn btn-primary">
-            <span class="btn-icon">💳</span> Tra cứu & Tính học phí kỳ này
-          </a>
-          <a href="profile.html" class="btn btn-secondary">
-            <span class="btn-icon">🔔</span> Cập nhật thông tin nhận thông báo
-          </a>
-        </div>
-      </div>
-    </section>
-  </main>
+    </div>
 
-  <script src="js/data.js"></script>
-  <script src="js/dashboard.js"></script>
+    <!-- ==================== MODAL 2: AI INTEGRATION & JSON DATA INSPECTOR ==================== -->
+    <div id="ai-inspector-modal" class="hidden fixed inset-0 z-50 bg-slate-900/70 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-3xl w-full max-h-[88vh] flex flex-col shadow-2xl border border-slate-200 overflow-hidden">
+            <div class="px-6 py-4 bg-lhu-dark text-white flex items-center justify-between">
+                <div class="flex items-center gap-2.5">
+                    <i class="fa-solid fa-robot text-lhu-gold text-lg"></i>
+                    <div>
+                        <h3 class="text-sm sm:text-base font-bold">Báo cáo Tích hợp AI & Cấu trúc Dữ liệu JSON</h3>
+                        <p class="text-[11px] text-slate-400">Học phần Thiết kế Web (111101) - Đại học Lạc Hồng</p>
+                    </div>
+                </div>
+                <button onclick="toggleAIModal()" class="w-8 h-8 rounded-lg bg-white/10 hover:bg-white/20 flex items-center justify-center text-white">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <div class="p-6 overflow-y-auto space-y-5 text-xs sm:text-sm">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                    <div class="p-3.5 rounded-xl bg-blue-50 border border-blue-200">
+                        <h4 class="font-bold text-lhu-navy text-xs mb-1"><i class="fa-solid fa-code mr-1"></i>1. AI Sinh Mã & Kiến Trúc SPA</h4>
+                        <p class="text-xs text-slate-600">Ứng dụng AI để tổ chức kiến trúc Single Page Application 3 trang chuẩn Responsive, tối ưu hóa CSS Grid/Flexbox và hệ thống màu nhận diện LHU.</p>
+                    </div>
+                    <div class="p-3.5 rounded-xl bg-amber-50 border border-amber-200">
+                        <h4 class="font-bold text-amber-800 text-xs mb-1"><i class="fa-solid fa-shield-halved mr-1"></i>2. AI Tối Ưu Regex Validation</h4>
+                        <p class="text-xs text-slate-600">Sử dụng biểu thức chính quy chuẩn xác cho số điện thoại Việt Nam và Email sinh viên, ngăn chặn sai sót dữ liệu đầu vào theo thời gian thực.</p>
+                    </div>
+                    <div class="p-3.5 rounded-xl bg-emerald-50 border border-emerald-200">
+                        <h4 class="font-bold text-emerald-800 text-xs mb-1"><i class="fa-solid fa-brain mr-1"></i>3. AI Tư Vấn Học Bổng Động</h4>
+                        <p class="text-xs text-slate-600">Thuật toán tự động tính khoảng cách GPA tới mức học bổng kế tiếp và quy đổi thành số tiền tiết kiệm cụ thể cho sinh viên.</p>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-xs font-bold uppercase tracking-wider text-slate-500">Trạng thái JSON hiện tại (mockDatabase - Live State):</span>
+                        <span class="text-[11px] text-emerald-600 font-semibold"><i class="fa-solid fa-circle text-[8px] mr-1"></i>Đồng bộ 3 trang</span>
+                    </div>
+                    <pre id="json-live-viewer" class="bg-slate-900 text-emerald-300 p-4 rounded-xl text-xs font-mono overflow-x-auto max-h-64 leading-relaxed"></pre>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== TOAST NOTIFICATION ==================== -->
+    <div id="toast-container" class="fixed top-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+    <!-- ==================== JAVASCRIPT LOGIC HOÀN CHỈNH ==================== -->
+    <script>
+        /**
+         * 1. CƠ SỞ DỮ LIỆU JSON TRUNG TÂM (mockDatabase)
+         * Đóng vai trò nguồn dữ liệu duy nhất (Single Source of Truth) đồng bộ giữa 3 trang.
+         */
+        const mockDatabase = {
+            student: {
+                mssv: "122001458",
+                fullName: "Nguyễn Minh Khôi",
+                email: "khoi.nm122@lhu.edu.vn",
+                phone: "0918456789",
+                dob: "2004-08-19",
+                faculty: "Công nghệ Thông tin",
+                gpa: 3.65,
+                drl: 88, // Điểm rèn luyện
+                deadline: "15/12/2026",
+                notifications: {
+                    email: true,
+                    sms: true
+                },
+                scholarshipMode: "auto-deduct"
+            },
+            unitPricePerCredit: 900000, // Đơn giá 900.000đ / 1 tín chỉ
+            extraFee: 680000, // Phí BHYT & tài nguyên số
+            courses: [
+                { id: "111101", name: "Thiết kế Web & Ứng dụng AI", credits: 3, type: "Bắt buộc", selected: true },
+                { id: "111102", name: "Cấu trúc Dữ liệu & Giải thuật", credits: 4, type: "Bắt buộc", selected: true },
+                { id: "111103", name: "Cơ sở Dữ liệu Phân tán", credits: 3, type: "Bắt buộc", selected: true },
+                { id: "111104", name: "Lập trình Hướng đối tượng (Java)", credits: 4, type: "Bắt buộc", selected: true },
+                { id: "111105", name: "Trí tuệ Nhân tạo Ứng dụng", credits: 3, type: "Tự chọn", selected: false },
+                { id: "111106", name: "An toàn & Bảo mật Hệ thống Thông tin", credits: 3, type: "Tự chọn", selected: false },
+                { id: "111107", name: "Kỹ năng Giao tiếp & Làm việc Nhóm", credits: 2, type: "Tự chọn", selected: false }
+            ]
+        };
+
+        /**
+         * 2. HÀM TIỆN ÍCH ĐỊNH DẠNG TIỀN TỆ & TÍNH MỨC HỌC BỔNG
+         */
+        function formatVND(amount) {
+            return new Intl.NumberFormat('vi-VN').format(Math.round(amount)) + ' đ';
+        }
+
+        // Xác định mức học bổng dựa trên GPA và Điểm rèn luyện
+        function evaluateScholarship(gpa, drl) {
+            if (gpa >= 3.90 && drl >= 90) {
+                return { level: "xuatsac", title: "Loại Xuất Sắc", percent: 100, rankLabel: "Xuất sắc tiêu biểu" };
+            } else if (gpa >= 3.60 && drl >= 80) {
+                return { level: "gioi", title: "Loại Giỏi", percent: 50, rankLabel: "Giỏi / Xuất sắc" };
+            } else if (gpa >= 3.20 && drl >= 70) {
+                return { level: "kha", title: "Loại Khá", percent: 30, rankLabel: "Khá" };
+            } else {
+                return { level: "none", title: "Chưa đạt học bổng", percent: 0, rankLabel: gpa >= 2.5 ? "Trung bình Khá" : "Trung bình" };
+            }
+        }
+
+        // Tính toán toàn bộ số liệu tài chính hiện tại
+        function calculateFinancialSummary() {
+            const selectedCourses = mockDatabase.courses.filter(c => c.selected);
+            const totalCredits = selectedCourses.reduce((sum, c) => sum + c.credits, 0);
+            const rawTuition = totalCredits * mockDatabase.unitPricePerCredit;
+            const scholarship = evaluateScholarship(mockDatabase.student.gpa, mockDatabase.student.drl);
+            const discountAmount = (rawTuition * scholarship.percent) / 100;
+            const netTuitionAfterScholarship = rawTuition - discountAmount;
+            const finalDebt = netTuitionAfterScholarship + Number(mockDatabase.extraFee || 0);
+
+            return {
+                selectedCount: selectedCourses.length,
+                totalCredits,
+                rawTuition,
+                scholarship,
+                discountAmount,
+                finalDebt
+            };
+        }
+
+        /**
+         * 3. ĐIỀU HƯỚNG GIỮA 3 TRANG (SPA ROUTER)
+         */
+        function navigateTo(pageId) {
+            // Ẩn tất cả các trang
+            document.querySelectorAll('.page-section').forEach(sec => sec.classList.remove('active'));
+            // Hiển thị trang được chọn
+            const target = document.getElementById(`page-${pageId}`);
+            if (target) target.classList.add('active');
+
+            // Cập nhật trạng thái nút Sidebar Desktop
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                if (btn.dataset.nav === pageId) {
+                    btn.classList.add('bg-lhu-navy', 'text-white', 'shadow-md');
+                    btn.classList.remove('text-slate-300', 'hover:bg-slate-800');
+                } else {
+                    btn.classList.remove('bg-lhu-navy', 'text-white', 'shadow-md');
+                    btn.classList.add('text-slate-300', 'hover:bg-slate-800');
+                }
+            });
+
+            // Cập nhật trạng thái nút Bottom Nav Mobile
+            document.querySelectorAll('.mobile-nav-btn').forEach(btn => {
+                if (btn.dataset.nav === pageId) {
+                    btn.classList.add('text-lhu-navy', 'font-bold');
+                    btn.classList.remove('text-slate-500');
+                } else {
+                    btn.classList.remove('text-lhu-navy', 'font-bold');
+                    btn.classList.add('text-slate-500');
+                }
+            });
+
+            // Cập nhật tiêu đề Header
+            const titles = {
+                dashboard: { crumb: "Trang Chủ", title: "Tổng quan Tài chính Sinh viên" },
+                tuition: { crumb: "Học Phí & Học Bổng", title: "Tra cứu Học bổng & Kê khai Học phí" },
+                profile: { crumb: "Hồ Sơ & Cấu Hình", title: "Quản lý Thông tin Sinh viên & Thiết lập" }
+            };
+            document.getElementById('header-breadcrumb').textContent = titles[pageId].crumb;
+            document.getElementById('header-page-title').textContent = titles[pageId].title;
+
+            // Cuộn lên đầu trang mượt mà
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        /**
+         * 4. SLIDER BANNER TRANG CHỦ (TỰ ĐỘNG CHẠY + NÚT ĐIỀU KHIỂN)
+         */
+        let currentSlide = 0;
+        const totalSlides = 3;
+        let slideInterval;
+
+        function updateSliderUI() {
+            const slides = document.querySelectorAll('.slide-item');
+            const dots = document.querySelectorAll('.slide-dot');
+
+            slides.forEach((slide, idx) => {
+                if (idx === currentSlide) {
+                    slide.classList.remove('opacity-0', 'pointer-events-none');
+                    slide.classList.add('opacity-100');
+                } else {
+                    slide.classList.add('opacity-0', 'pointer-events-none');
+                    slide.classList.remove('opacity-100');
+                }
+            });
+
+            dots.forEach((dot, idx) => {
+                if (idx === currentSlide) {
+                    dot.classList.remove('w-2', 'bg-white/40');
+                    dot.classList.add('w-6', 'bg-lhu-gold');
+                } else {
+                    dot.classList.remove('w-6', 'bg-lhu-gold');
+                    dot.classList.add('w-2', 'bg-white/40');
+                }
+            });
+        }
+
+        function nextSlide() {
+            currentSlide = (currentSlide + 1) % totalSlides;
+            updateSliderUI();
+            resetSlideTimer();
+        }
+
+        function prevSlide() {
+            currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+            updateSliderUI();
+            resetSlideTimer();
+        }
+
+        function goToSlide(index) {
+            currentSlide = index;
+            updateSliderUI();
+            resetSlideTimer();
+        }
+
+        function resetSlideTimer() {
+            clearInterval(slideInterval);
+            slideInterval = setInterval(() => {
+                currentSlide = (currentSlide + 1) % totalSlides;
+                updateSliderUI();
+            }, 5000);
+        }
+
+        /**
+         * 5. ĐỒNG BỘ DỮ LIỆU LÊN TOÀN BỘ GIAO DIỆN (3 TRANG)
+         */
+        function syncAllViews() {
+            const st = mockDatabase.student;
+            const summary = calculateFinancialSummary();
+            const initials = st.fullName.trim().split(' ').slice(-2).map(w => w[0]).join('').toUpperCase();
+
+            // Cập nhật Sidebar & Header
+            document.getElementById('sidebar-avatar').textContent = initials;
+            document.getElementById('header-avatar').textContent = initials;
+            document.getElementById('profile-big-avatar').textContent = initials;
+            document.getElementById('sidebar-name').textContent = st.fullName;
+            document.getElementById('header-name').textContent = st.fullName;
+            document.getElementById('profile-display-name').textContent = st.fullName;
+            document.getElementById('sidebar-mssv').textContent = st.mssv;
+            document.getElementById('sidebar-gpa').textContent = `${st.gpa.toFixed(2)} / 4.0`;
+            document.getElementById('header-faculty').textContent = `Khoa ${st.faculty}`;
+
+            // Cập nhật Trang 1: Dashboard KPIs
+            document.getElementById('dash-gpa').textContent = st.gpa.toFixed(2);
+            document.getElementById('dash-rank').innerHTML = `<i class="fa-solid fa-circle-check"></i> Xếp loại: ${summary.scholarship.rankLabel}`;
+            document.getElementById('dash-scholarship-percent').textContent = `${summary.scholarship.percent}%`;
+            document.getElementById('dash-scholarship-name').textContent = summary.scholarship.title;
+            document.getElementById('dash-scholarship-amount').innerHTML = `Giảm trừ: <strong class="text-slate-900">${formatVND(summary.discountAmount)}</strong>`;
+            document.getElementById('dash-net-tuition').textContent = formatVND(summary.finalDebt);
+            document.getElementById('dash-credits-summary').innerHTML = `Đã chọn <strong class="text-slate-800">${summary.selectedCount} môn</strong> (${summary.totalCredits} tín chỉ)`;
+            document.getElementById('dash-deadline').textContent = st.deadline;
+
+            // Thông tin chi tiết trên Dashboard
+            document.getElementById('dash-info-name').textContent = st.fullName;
+            document.getElementById('dash-info-mssv').textContent = st.mssv;
+            document.getElementById('dash-info-faculty').textContent = st.faculty;
+            document.getElementById('dash-info-drl').textContent = `${st.drl} / 100`;
+            document.getElementById('dash-info-email').textContent = st.email;
+
+            // Cập nhật Trợ lý AI Phân tích (Dashboard & Trang Học phí)
+            updateAIInsights(st, summary);
+
+            // Cập nhật Trang 2: Highlight Thẻ Học Bổng & Bộ mô phỏng GPA
+            document.getElementById('gpa-simulator-range').value = st.gpa;
+            document.getElementById('gpa-simulator-input').value = st.gpa.toFixed(2);
+            highlightScholarshipCard(summary.scholarship.level);
+
+            // Cập nhật Trang 2: Bảng quyết toán học phí
+            document.getElementById('calc-total-credits').textContent = `${summary.totalCredits} tín chỉ`;
+            document.getElementById('calc-raw-tuition').textContent = formatVND(summary.rawTuition);
+            document.getElementById('calc-sch-rate').textContent = `${summary.scholarship.percent}%`;
+            document.getElementById('calc-sch-discount').textContent = `- ${formatVND(summary.discountAmount)}`;
+            document.getElementById('calc-extra-fee-display').textContent = formatVND(mockDatabase.extraFee);
+            document.getElementById('calc-final-debt').textContent = formatVND(summary.finalDebt);
+
+            // Cập nhật JSON Inspector
+            const jsonViewer = document.getElementById('json-live-viewer');
+            if (jsonViewer) {
+                jsonViewer.textContent = JSON.stringify(mockDatabase, null, 2);
+            }
+        }
+
+        // Highlight thẻ học bổng đạt được
+        function highlightScholarshipCard(activeLevel) {
+            const levels = ['kha', 'gioi', 'xuatsac'];
+            levels.forEach(lvl => {
+                const card = document.getElementById(`sch-card-${lvl}`);
+                const badge = card.querySelector('.sch-badge');
+                if (lvl === activeLevel) {
+                    card.classList.add('scholarship-card-active');
+                    badge.classList.remove('hidden');
+                } else {
+                    card.classList.remove('scholarship-card-active');
+                    badge.classList.add('hidden');
+                }
+            });
+        }
+
+        // Sinh lời khuyên tự động từ AI Financial Advisor
+        function updateAIInsights(st, summary) {
+            const dashAI = document.getElementById('dash-ai-insight');
+            const tuitionAI = document.getElementById('tuition-ai-text');
+
+            let adviceHTML = '';
+            let shortAdvice = '';
+
+            if (summary.scholarship.level === 'xuatsac') {
+                adviceHTML = `
+                    <p>🎉 <strong>Chúc mừng ${st.fullName}!</strong> Với GPA <strong>${st.gpa.toFixed(2)}</strong> và ĐRL <strong>${st.drl}</strong>, AI xác nhận bạn đang đạt mức học bổng cao nhất <strong>100%</strong>.</p>
+                    <p class="text-amber-300">💰 Bạn tiết kiệm được tối đa <strong>${formatVND(summary.discountAmount)}</strong> học phí kỳ này.</p>
+                `;
+                shortAdvice = `AI Phân tích: Bạn đang đạt mức Học bổng Xuất Sắc (100%), miễn giảm toàn bộ ${formatVND(summary.discountAmount)} học phí tín chỉ!`;
+            } else if (summary.scholarship.level === 'gioi') {
+                const gap = (3.90 - st.gpa).toFixed(2);
+                const extraSave = summary.rawTuition * 0.5;
+                adviceHTML = `
+                    <p>📊 Với GPA <strong>${st.gpa.toFixed(2)}</strong>, bạn đang hưởng mức Học bổng <strong>Loại Giỏi (50%)</strong>, giảm trừ <strong>${formatVND(summary.discountAmount)}</strong>.</p>
+                    <p class="text-amber-300">💡 <strong>Gợi ý AI:</strong> Chỉ cần nâng thêm <strong>+${gap} điểm GPA</strong> (đạt 3.90), bạn sẽ chạm mốc Học bổng 100% và tiết kiệm thêm <strong>${formatVND(extraSave)}</strong>!</p>
+                `;
+                shortAdvice = `AI Gợi ý: Bạn đang đạt Học bổng 50%. Nâng thêm +${gap} GPA (lên 3.90) để nhận học bổng 100% và tiết kiệm thêm ${formatVND(extraSave)}.`;
+            } else if (summary.scholarship.level === 'kha') {
+                const gap = (3.60 - st.gpa).toFixed(2);
+                const extraSave = summary.rawTuition * 0.2;
+                adviceHTML = `
+                    <p>📊 Bạn đang đạt Học bổng <strong>Loại Khá (30%)</strong>, tiết kiệm <strong>${formatVND(summary.discountAmount)}</strong>.</p>
+                    <p class="text-amber-300">💡 <strong>Gợi ý AI:</strong> Cố gắng cải thiện thêm <strong>+${gap} điểm GPA</strong> để lên hạng Giỏi (50%) và giảm thêm <strong>${formatVND(extraSave)}</strong>.</p>
+                `;
+                shortAdvice = `AI Gợi ý: Đang áp dụng mức giảm 30%. Cần thêm +${gap} GPA để nâng lên mức Học bổng Giỏi (50%).`;
+            } else {
+                const gap = Math.max(0, 3.20 - st.gpa).toFixed(2);
+                adviceHTML = `
+                    <p>⚠️ Hiện tại GPA <strong>${st.gpa.toFixed(2)}</strong> chưa đủ điều kiện nhận học bổng khuyến khích (yêu cầu tối thiểu GPA 3.20 và ĐRL ≥ 70).</p>
+                    <p class="text-amber-300">💡 <strong>Gợi ý AI:</strong> Mục tiêu khả thi nhất là tăng thêm <strong>+${gap} điểm GPA</strong> để nhận học bổng 30% cho kỳ tiếp theo.</p>
+                `;
+                shortAdvice = `AI Cảnh báo: Chưa đủ điều kiện học bổng. Cần đạt tối thiểu GPA 3.20 và ĐRL 70 để mở khóa mức giảm 30%.`;
+            }
+
+            dashAI.innerHTML = adviceHTML;
+            tuitionAI.textContent = shortAdvice;
+        }
+
+        /**
+         * 6. RENDER DANH SÁCH MÔN HỌC + FILTER / SEARCH + SỰ KIỆN CHECKBOX CHANGE
+         */
+        function renderCoursesTable() {
+            const tbody = document.getElementById('courses-table-body');
+            const searchQuery = document.getElementById('course-search').value.toLowerCase().trim();
+            const typeFilter = document.getElementById('course-filter-type').value;
+
+            const filteredCourses = mockDatabase.courses.filter(course => {
+                const matchSearch = course.name.toLowerCase().includes(searchQuery) || course.id.toLowerCase().includes(searchQuery);
+                const matchType = typeFilter === 'all' || course.type === typeFilter;
+                return matchSearch && matchType;
+            });
+
+            if (filteredCourses.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="5" class="py-8 text-center text-slate-400 text-xs">
+                            <i class="fa-solid fa-folder-open text-2xl mb-2 block"></i>
+                            Không tìm thấy học phần phù hợp với từ khóa tìm kiếm.
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            tbody.innerHTML = filteredCourses.map(course => {
+                const courseCost = course.credits * mockDatabase.unitPricePerCredit;
+                const badgeClass = course.type === 'Bắt buộc' 
+                    ? 'bg-blue-50 text-lhu-navy border border-blue-200' 
+                    : 'bg-amber-50 text-amber-800 border border-amber-200';
+
+                return `
+                    <tr class="hover:bg-slate-50/90 transition-colors ${course.selected ? 'bg-blue-50/20' : ''}">
+                        <td class="py-3.5 px-3.5 text-center">
+                            <input type="checkbox" 
+                                   data-course-id="${course.id}" 
+                                   ${course.selected ? 'checked' : ''} 
+                                   class="course-checkbox w-4 h-4 rounded text-lhu-navy accent-lhu-navy cursor-pointer">
+                        </td>
+                        <td class="py-3.5 px-3.5">
+                            <div class="font-bold text-slate-800 text-xs sm:text-sm">${course.name}</div>
+                            <div class="text-[11px] font-mono text-slate-400 mt-0.5">Mã HP: ${course.id}</div>
+                        </td>
+                        <td class="py-3.5 px-3.5 text-center">
+                            <span class="px-2.5 py-0.5 rounded-full text-[11px] font-semibold ${badgeClass}">${course.type}</span>
+                        </td>
+                        <td class="py-3.5 px-3.5 text-center font-bold text-slate-700">${course.credits}</td>
+                        <td class="py-3.5 px-3.5 text-right font-bold text-slate-900">${formatVND(courseCost)}</td>
+                    </tr>
+                `;
+            }).join('');
+
+            // Gắn sự kiện 'change' trực tiếp lên từng checkbox môn học theo yêu cầu đề bài
+            document.querySelectorAll('.course-checkbox').forEach(checkbox => {
+                checkbox.addEventListener('change', function(e) {
+                    const courseId = e.target.dataset.courseId;
+                    const targetCourse = mockDatabase.courses.find(c => c.id === courseId);
+                    if (targetCourse) {
+                        targetCourse.selected = e.target.checked;
+                        syncAllViews();
+                    }
+                });
+            });
+        }
+
+        function selectAllCourses(isSelected) {
+            mockDatabase.courses.forEach(c => c.selected = isSelected);
+            renderCoursesTable();
+            syncAllViews();
+        }
+
+        /**
+         * 7. XỬ LÝ FORM HỒ SƠ & REGEX VALIDATION (TRANG 3)
+         */
+        function loadProfileForm() {
+            const st = mockDatabase.student;
+            document.getElementById('prof-name').value = st.fullName;
+            document.getElementById('prof-mssv').value = st.mssv;
+            document.getElementById('prof-email').value = st.email;
+            document.getElementById('prof-phone').value = st.phone;
+            document.getElementById('prof-dob').value = st.dob;
+            document.getElementById('prof-faculty').value = st.faculty;
+            document.getElementById('prof-gpa').value = st.gpa;
+            document.getElementById('prof-drl').value = st.drl;
+            document.getElementById('notif-email').checked = st.notifications.email;
+            document.getElementById('notif-sms').checked = st.notifications.sms;
+
+            // Ẩn thông báo lỗi cũ
+            ['prof-name', 'prof-email', 'prof-phone', 'prof-dob', 'prof-gpa'].forEach(id => {
+                document.getElementById(`err-${id}`).classList.add('hidden');
+                document.getElementById(id).classList.remove('border-rose-500');
+            });
+        }
+
+        function validateProfileForm() {
+            let isValid = true;
+
+            // Regex chuẩn cho Email & Số điện thoại Việt Nam
+            const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+            const vnPhoneRegex = /^(0|\+84)(3|5|7|8|9)[0-9]{8}$/;
+
+            const nameEl = document.getElementById('prof-name');
+            const emailEl = document.getElementById('prof-email');
+            const phoneEl = document.getElementById('prof-phone');
+            const dobEl = document.getElementById('prof-dob');
+            const gpaEl = document.getElementById('prof-gpa');
+
+            // Kiểm tra Họ tên
+            if (nameEl.value.trim().length < 3) {
+                showFieldError(nameEl, 'err-prof-name');
+                isValid = false;
+            } else {
+                hideFieldError(nameEl, 'err-prof-name');
+            }
+
+            // Kiểm tra Email bằng Regex
+            if (!emailRegex.test(emailEl.value.trim())) {
+                showFieldError(emailEl, 'err-prof-email');
+                isValid = false;
+            } else {
+                hideFieldError(emailEl, 'err-prof-email');
+            }
+
+            // Kiểm tra Số điện thoại VN bằng Regex
+            if (!vnPhoneRegex.test(phoneEl.value.trim().replace(/\s+/g, ''))) {
+                showFieldError(phoneEl, 'err-prof-phone');
+                isValid = false;
+            } else {
+                hideFieldError(phoneEl, 'err-prof-phone');
+            }
+
+            // Kiểm tra Ngày sinh
+            if (!dobEl.value) {
+                showFieldError(dobEl, 'err-prof-dob');
+                isValid = false;
+            } else {
+                hideFieldError(dobEl, 'err-prof-dob');
+            }
+
+            // Kiểm tra GPA (0 - 4.0)
+            const gpaVal = parseFloat(gpaEl.value);
+            if (isNaN(gpaVal) || gpaVal < 0 || gpaVal > 4.0) {
+                showFieldError(gpaEl, 'err-prof-gpa');
+                isValid = false;
+            } else {
+                hideFieldError(gpaEl, 'err-prof-gpa');
+            }
+
+            return isValid;
+        }
+
+        function showFieldError(inputEl, errId) {
+            inputEl.classList.add('border-rose-500', 'bg-rose-50/30');
+            document.getElementById(errId).classList.remove('hidden');
+        }
+
+        function hideFieldError(inputEl, errId) {
+            inputEl.classList.remove('border-rose-500', 'bg-rose-50/30');
+            document.getElementById(errId).classList.add('hidden');
+        }
+
+        /**
+         * 8. THÔNG BÁO TOAST & MODALS
+         */
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            const bgColor = type === 'success' ? 'bg-lhu-dark border-lhu-gold text-white' : 'bg-rose-600 border-rose-300 text-white';
+            const icon = type === 'success' ? '<i class="fa-solid fa-circle-check text-lhu-gold"></i>' : '<i class="fa-solid fa-triangle-exclamation"></i>';
+
+            toast.className = `pointer-events-auto flex items-center gap-3 px-4 py-3 rounded-xl border-l-4 shadow-xl text-xs sm:text-sm font-medium transition-all duration-300 ${bgColor}`;
+            toast.innerHTML = `${icon}<span>${message}</span>`;
+
+            container.appendChild(toast);
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transform = 'translateX(20px)';
+                setTimeout(() => toast.remove(), 300);
+            }, 3500);
+        }
+
+        function toggleAIModal() {
+            const modal = document.getElementById('ai-inspector-modal');
+            modal.classList.toggle('hidden');
+            document.getElementById('json-live-viewer').textContent = JSON.stringify(mockDatabase, null, 2);
+        }
+
+        function closeReceiptModal() {
+            document.getElementById('receipt-modal').classList.add('hidden');
+        }
+
+        /**
+         * 9. KHỞI TẠO SỰ KIỆN KHI TRANG TẢI XONG
+         */
+        window.addEventListener('DOMContentLoaded', () => {
+            // Thiết lập ngày mặc định cho input date thanh toán là hôm nay
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('payment-date-input').value = today;
+
+            // Khởi chạy Slider tự động
+            resetSlideTimer();
+
+            // Render dữ liệu ban đầu
+            renderCoursesTable();
+            loadProfileForm();
+            syncAllViews();
+
+            // Sự kiện Search & Filter môn học
+            document.getElementById('course-search').addEventListener('input', renderCoursesTable);
+            document.getElementById('course-filter-type').addEventListener('change', renderCoursesTable);
+
+            // Sự kiện Bộ mô phỏng GPA (Thanh trượt & Input number)
+            const gpaRange = document.getElementById('gpa-simulator-range');
+            const gpaInput = document.getElementById('gpa-simulator-input');
+
+            gpaRange.addEventListener('input', (e) => {
+                mockDatabase.student.gpa = parseFloat(e.target.value);
+                document.getElementById('prof-gpa').value = mockDatabase.student.gpa.toFixed(2);
+                syncAllViews();
+            });
+
+            gpaInput.addEventListener('input', (e) => {
+                let val = parseFloat(e.target.value);
+                if (!isNaN(val)) {
+                    val = Math.min(4.0, Math.max(0, val));
+                    mockDatabase.student.gpa = val;
+                    document.getElementById('prof-gpa').value = val.toFixed(2);
+                    syncAllViews();
+                }
+            });
+
+            // Sự kiện thay đổi Phí bổ sung (HTML5 input number)
+            document.getElementById('extra-fee-input').addEventListener('input', (e) => {
+                const val = parseFloat(e.target.value);
+                mockDatabase.extraFee = isNaN(val) || val < 0 ? 0 : val;
+                syncAllViews();
+            });
+
+            // Sự kiện Submit Form Thanh toán (Trang 2)
+            document.getElementById('payment-simulation-form').addEventListener('submit', (e) => {
+                e.preventDefault();
+                const summary = calculateFinancialSummary();
+                const payDate = document.getElementById('payment-date-input').value;
+
+                if (summary.totalCredits === 0 && mockDatabase.extraFee === 0) {
+                    showToast('Vui lòng chọn ít nhất 1 môn học hoặc nhập khoản phí cần đóng!', 'error');
+                    return;
+                }
+
+                const receiptHTML = `
+                    <div class="flex justify-between"><span class="text-slate-500">Mã giao dịch:</span><strong class="font-mono text-lhu-navy">LHU-${Date.now().toString().slice(-6)}</strong></div>
+                    <div class="flex justify-between"><span class="text-slate-500">Sinh viên:</span><strong>${mockDatabase.student.fullName} (${mockDatabase.student.mssv})</strong></div>
+                    <div class="flex justify-between"><span class="text-slate-500">Ngày dự kiến nộp:</span><strong>${payDate}</strong></div>
+                    <div class="flex justify-between"><span class="text-slate-500">Số tín chỉ đăng ký:</span><strong>${summary.totalCredits} tín chỉ</strong></div>
+                    <div class="flex justify-between text-emerald-700"><span>Học bổng áp dụng (${summary.scholarship.percent}%):</span><strong>- ${formatVND(summary.discountAmount)}</strong></div>
+                    <div class="pt-2 border-t border-slate-200 flex justify-between text-sm">
+                        <span class="font-bold text-slate-800">TỔNG THANH TOÁN:</span>
+                        <strong class="text-rose-600">${formatVND(summary.finalDebt)}</strong>
+                    </div>
+                `;
+                document.getElementById('receipt-content').innerHTML = receiptHTML;
+                document.getElementById('receipt-modal').classList.remove('hidden');
+            });
+
+            // Sự kiện Submit Form Hồ sơ & Regex Validation thời gian thực (Trang 3)
+            ['prof-name', 'prof-email', 'prof-phone', 'prof-dob', 'prof-gpa'].forEach(id => {
+                document.getElementById(id).addEventListener('input', validateProfileForm);
+            });
+
+            document.getElementById('profile-settings-form').addEventListener('submit', (e) => {
+                e.preventDefault();
+                if (!validateProfileForm()) {
+                    showToast('Vui lòng kiểm tra lại các trường báo đỏ trong biểu mẫu!', 'error');
+                    return;
+                }
+
+                // Lưu dữ liệu vào mockDatabase JSON
+                mockDatabase.student.fullName = document.getElementById('prof-name').value.trim();
+                mockDatabase.student.email = document.getElementById('prof-email').value.trim();
+                mockDatabase.student.phone = document.getElementById('prof-phone').value.trim();
+                mockDatabase.student.dob = document.getElementById('prof-dob').value;
+                mockDatabase.student.faculty = document.getElementById('prof-faculty').value;
+                mockDatabase.student.gpa = parseFloat(document.getElementById('prof-gpa').value);
+                mockDatabase.student.drl = parseInt(document.getElementById('prof-drl').value) || 0;
+                mockDatabase.student.notifications.email = document.getElementById('notif-email').checked;
+                mockDatabase.student.notifications.sms = document.getElementById('notif-sms').checked;
+
+                // Đồng bộ toàn bộ 3 trang
+                syncAllViews();
+                showToast('Đã lưu hồ sơ & cập nhật mức học bổng trên toàn hệ thống!', 'success');
+            });
+        });
+    </script>
 </body>
 </html>
